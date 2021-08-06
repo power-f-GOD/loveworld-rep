@@ -1,21 +1,54 @@
-import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import 'react-native-gesture-handler';
+import { StyleSheet, StatusBar, View } from 'react-native';
+import { Provider as ReduxProvider } from 'react-redux';
+import AppLoading from 'expo-app-loading';
+import {
+  useFonts,
+  Poppins_400Regular,
+  Poppins_700Bold
+} from '@expo-google-fonts/poppins';
+import { Provider as PaperProvider, DefaultTheme } from 'react-native-paper';
 
-export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
-}
+import store from './src/state/store';
+import App from './src';
+import { fonts, colors, space } from 'src/constants';
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
+  app: {
+    paddingTop: StatusBar.currentHeight,
+    height: '100%',
+    fontFamily: fonts.regular
+  }
 });
+
+const theme = {
+  ...DefaultTheme,
+  roundness: space.xs,
+  colors: {
+    ...DefaultTheme.colors,
+    primary: colors.white,
+    accent: colors.green
+  }
+};
+
+export default () => {
+  const [fontsLoaded] = useFonts({
+    Poppins_400Regular,
+    Poppins_700Bold
+  });
+
+  if (!fontsLoaded) {
+    return <AppLoading />;
+  }
+
+  return (
+    <ReduxProvider store={store}>
+      <PaperProvider theme={theme}>
+        <View style={styles.app}>
+          <App />
+        </View>
+      </PaperProvider>
+    </ReduxProvider>
+  );
+};
