@@ -22,13 +22,27 @@ const styles = StyleSheet.create({
   }
 });
 
-const theme = {
+const theme: typeof DefaultTheme = {
   ...DefaultTheme,
   roundness: space.xs,
   colors: {
     ...DefaultTheme.colors,
     primary: colors.white,
     accent: colors.green
+  },
+  fonts: {
+    regular: {
+      fontFamily: fonts.regular
+    },
+    medium: {
+      fontFamily: fonts.regular
+    },
+    light: {
+      fontFamily: fonts.regular
+    },
+    thin: {
+      fontFamily: fonts.regular
+    }
   }
 };
 

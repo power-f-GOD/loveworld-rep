@@ -83,12 +83,14 @@ const _REPTextInput: FC<
       }}>
       {label && (
         <MotiView
+          pointerEvents='none'
           style={[S.label, isFocused && { backgroundColor: '#eee' }]}
           state={labelAnimState}
           transition={{ type: 'timing' as any, duration: 300 }}>
           <Text
             style={{
-              color: err ? colors.red : colors.black
+              color: err ? colors.red : colors.black,
+              ...fontFamily
             }}>
             {label}
           </Text>

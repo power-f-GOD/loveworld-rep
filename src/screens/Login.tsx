@@ -19,14 +19,23 @@ import {
   REPLink
 } from 'src/components';
 import { colors, fonts, space } from 'src/constants';
-import { REPStackScreenProps } from 'src/types';
-import { dispatch, signin, auth, triggerSignin } from 'src/state';
+import { REPStackScreenProps, UserData } from 'src/types';
+import {
+  dispatch,
+  signin,
+  auth,
+  triggerSignin,
+  displaySnackbar
+} from 'src/state';
 import { authStyles } from 'src/styles';
+import { connect } from 'react-redux';
 
-export const Login: FC<REPStackScreenProps<'Login'>> = ({ navigation }) => {
+export const _Login: FC<
+  REPStackScreenProps<'Login'> & { userData: UserData }
+> = ({ navigation, userData }) => {
   const { width } = Dimensions.get('window');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState(userData.email || '');
+  const [password, setPassword] = useState(userData.password || '');
 
   return (
     <View style={authStyles.Auth}>
@@ -69,7 +78,16 @@ export const Login: FC<REPStackScreenProps<'Login'>> = ({ navigation }) => {
           <REPButton
             style={{ marginTop: 130 }}
             onPress={() => {
-              dispatch(triggerSignin());
+              if (email && password) {
+                return dispatch(triggerSignin({ email, password }));
+              }
+
+              dispatch(
+                displaySnackbar({
+                  open: true,
+                  message: 'Input email and password.'
+                })
+              );
             }}>
             LOGIN
           </REPButton>
@@ -88,3 +106,7 @@ export const Login: FC<REPStackScreenProps<'Login'>> = ({ navigation }) => {
     </View>
   );
 };
+
+export const Login = connect((state: { userData: UserData }) => ({
+  userData: state.userData
+}))(_Login);

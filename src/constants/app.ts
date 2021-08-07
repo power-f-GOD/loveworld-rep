@@ -1,10 +1,46 @@
+import { REPSnackbarProps, UserData, REPModalProps } from 'src/types';
+
+export const APIBaseURL = 'http://lw-rep-jarvis.herokuapp.com';
+export const DISPLAY_SNACK_BAR = 'DISPLAY_SNACK_BAR';
+export const DISPLAY_MODAL = 'DISPLAY_MODAL';
+export const USER_DATA = 'USER_DATA';
+
+export const userDataState: UserData = {
+  _id: '',
+  email: '',
+  full_name: '',
+  createdAt: '',
+  updatedAt: '',
+  __v: 0,
+  created_at: '',
+  organization: '',
+  updated_at: ''
+};
+
+export const snackbarState: REPSnackbarProps = {
+  open: false,
+  message: ' ',
+  severity: 'info',
+  duration: 5000
+  // autoHide: false
+};
+
+export const modalState: REPModalProps = {
+  open: false,
+  children: []
+};
+
 export const colors = {
   red: '#d22',
   green: '#2a2',
   purple: 'purple',
   white: 'white',
   black: '#111',
-  grey: 'grey'
+  grey: 'grey',
+  warning: 'gold',
+  success: 'green',
+  error: '#d00',
+  info: '#333'
 };
 
 export const space = {

@@ -12,6 +12,7 @@ export const REPAnimate: FC<{
   delay?: number;
   duration?: number;
   noAnimate?: boolean;
+  loop?: boolean;
 }> = ({
   style,
   direction,
@@ -21,6 +22,7 @@ export const REPAnimate: FC<{
   easing,
   delay,
   noAnimate,
+  loop,
   children
 }) => {
   return Children.map(children, (child: any, i) => {
@@ -60,7 +62,8 @@ export const REPAnimate: FC<{
               ? animationDuration
               : duration !== undefined
               ? duration
-              : 350
+              : 350,
+          loop
         }}>
         {child}
       </MotiView>

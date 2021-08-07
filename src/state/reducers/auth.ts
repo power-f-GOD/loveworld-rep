@@ -1,5 +1,15 @@
-import { USER_AUTHENTICATE, authState } from '../../constants';
-import { AuthProps, ActionProps } from '../../types';
+import {
+  USER_AUTHENTICATE,
+  authState,
+  orgsState,
+  ORGANIZATIONS_FETCH
+} from 'src/constants';
+import {
+  AuthProps,
+  ActionProps,
+  APIOrgQueryResponse,
+  FetchState
+} from 'src/types';
 
 export const auth = (
   state: AuthProps = authState,
@@ -12,4 +22,13 @@ export const auth = (
     };
   }
   return state;
+};
+
+export const organizations = (
+  state: FetchState<APIOrgQueryResponse> = orgsState,
+  action: ActionProps<FetchState<APIOrgQueryResponse>>
+): FetchState<APIOrgQueryResponse> => {
+  return action.type === ORGANIZATIONS_FETCH
+    ? { ...state, ...action.payload }
+    : state;
 };

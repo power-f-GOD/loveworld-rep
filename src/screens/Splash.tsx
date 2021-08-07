@@ -9,7 +9,7 @@ export const Splash = () => {
   return (
     <View style={S.Splash}>
       <View>
-        <Logo style={S.logo} animate />
+        <Logo style={S.logo} animate loopAnimation />
       </View>
     </View>
   );

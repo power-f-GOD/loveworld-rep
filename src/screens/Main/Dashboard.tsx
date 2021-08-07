@@ -1,4 +1,4 @@
-import React, { memo } from 'react';
+import React, { memo, FC } from 'react';
 import { View, ScrollView, StyleSheet } from 'react-native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Button } from 'react-native-paper';
@@ -8,18 +8,20 @@ import { dispatch, triggerSignout } from 'src/state';
 import { mainStyles } from 'src/styles';
 import { fonts, colors, space } from 'src/constants';
 import { REPText } from 'src/components';
+import { connect } from 'react-redux';
+import { UserData } from 'src/types';
 // import { NavigationContainer } from '@react-navigation/native';
 
 // const Stack = createNativeStackNavigator();
 
-const _Dashboard = () => {
+const _Dashboard: FC<{ userData: UserData }> = ({ userData }) => {
   return (
     <ScrollView style={mainStyles.Tab}>
       <REPText
         style={[fonts.h1, { lineHeight: fonts.h1.fontSize + 5 }]}
         size={fonts.h1.fontSize}
         bold>
-        Hi, Power!
+        Hi, {userData.full_name?.split(' ')[0] || '...'}!
       </REPText>
       <REPText>Welcome back!</REPText>
       <ScrollView
@@ -44,7 +46,7 @@ const _Dashboard = () => {
               R
             </REPText> */}
             <MaterialIcons
-              name='view-dashboard'
+              name='database'
               color={'white'}
               size={space.md}
               style={[S.boxIcon]}
@@ -62,7 +64,7 @@ const _Dashboard = () => {
           </REPText>
           <View style={S.boxCircle}>
             <MaterialIcons
-              name='database'
+              name='calendar-month'
               color={'white'}
               size={space.md}
               style={[S.boxIcon]}
@@ -101,7 +103,9 @@ const _Dashboard = () => {
   );
 };
 
-export const Dashboard = memo(_Dashboard);
+export const Dashboard = connect((state: { userData: UserData }) => ({
+  userData: state.userData
+}))(_Dashboard);
 
 const boxSize = 105;
 

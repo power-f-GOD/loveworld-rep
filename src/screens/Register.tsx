@@ -1,14 +1,6 @@
-import React, { useRef, useEffect, useState, FC } from 'react';
-import {
-  View,
-  StyleSheet,
-  Dimensions,
-  Animated,
-  TextInput,
-  ScrollView
-} from 'react-native';
-import { View as MotiView } from 'moti';
-import { Button } from 'react-native-paper';
+import React, { useEffect, useState, FC } from 'react';
+import { View, ScrollView, TouchableNativeFeedback } from 'react-native';
+import { TextInput, List } from 'react-native-paper';
 
 import {
   Logo,
@@ -18,23 +10,65 @@ import {
   REPText,
   REPLink
 } from 'src/components';
-import { colors, fonts, space } from 'src/constants';
-import { REPStackScreenProps } from 'src/types';
+import { colors, space } from 'src/constants';
+import {
+  REPStackScreenProps,
+  FetchState,
+  APIOrgQueryResponse,
+  UserData
+} from 'src/types';
 import {
   dispatch,
-  signin,
-  auth,
-  triggerSignin,
-  triggerRegister
+  triggerRegister,
+  displaySnackbar,
+  displayModal
 } from 'src/state';
 import { authStyles } from 'src/styles';
+import { connect } from 'react-redux';
 
-export const Register: FC<REPStackScreenProps<'Register'>> = ({
-  navigation
-}) => {
-  const [fullname, setFullname] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+const _Register: FC<
+  REPStackScreenProps<'Register'> & {
+    organizations: FetchState<APIOrgQueryResponse>;
+    userData: UserData;
+  }
+> = ({ navigation, organizations: _orgs, userData }) => {
+  const [full_name, setFullname] = useState(userData.full_name || '');
+  const [email, setEmail] = useState(userData.email || '');
+  const [password, setPassword] = useState(userData.password || '');
+  const [org, setOrg] = useState({ name: '', id: '' });
+  const { data: orgsData, status: orgsStatus } = _orgs;
+
+  useEffect(() => {
+    if (orgsStatus === 'fulfilled') {
+      dispatch(
+        displayModal({
+          children: orgsData?.map((org) => (
+            <TouchableNativeFeedback
+              onPress={() => {
+                dispatch(displayModal({ open: false }));
+                setOrg({ name: org.name, id: org._id });
+              }}
+              key={org._id}>
+              <View>
+                <List.Item
+                  title={org.name}
+                  description={`Category: ${
+                    org.office[0].toUpperCase() + org.office.slice(1)
+                  }`}
+                  left={(props) => (
+                    <List.Icon
+                      {...props}
+                      style={{ margin: 0 }}
+                      icon='map-marker'
+                    />
+                  )}></List.Item>
+              </View>
+            </TouchableNativeFeedback>
+          ))
+        })
+      );
+    }
+  }, [orgsStatus, orgsData]);
 
   return (
     <View style={authStyles.Auth}>
@@ -49,7 +83,7 @@ export const Register: FC<REPStackScreenProps<'Register'>> = ({
 
           <REPTextInput
             label='Full name'
-            value={fullname}
+            value={full_name}
             style={{ marginTop: 50 }}
             onChangeText={(text) => setFullname(text)}
           />
@@ -69,10 +103,52 @@ export const Register: FC<REPStackScreenProps<'Register'>> = ({
             onChangeText={(text) => setPassword(text)}
           />
 
+          <View style={{ marginTop: 20 }}>
+            <TouchableNativeFeedback
+              onPress={() => {
+                dispatch(
+                  displayModal({
+                    open: true,
+                    title: 'Find Church'
+                  })
+                );
+              }}>
+              <View>
+                <TextInput
+                  label='Church'
+                  value={org.name}
+                  pointerEvents='none'
+                  disabled={true}
+                  style={{
+                    backgroundColor: 'transparent',
+                    borderBottomColor: colors.black,
+                    borderBottomWidth: 1
+                  }}
+                />
+              </View>
+            </TouchableNativeFeedback>
+          </View>
+
           <REPButton
             style={{ marginTop: 50 }}
             onPress={() => {
-              dispatch(triggerRegister());
+              if (full_name && email && password && org.id) {
+                return dispatch(
+                  triggerRegister({
+                    full_name,
+                    email,
+                    password,
+                    organization: org.id
+                  })
+                );
+              }
+
+              dispatch(
+                displaySnackbar({
+                  open: true,
+                  message: 'All fields are required.'
+                })
+              );
             }}>
             REGISTER
           </REPButton>
@@ -91,3 +167,13 @@ export const Register: FC<REPStackScreenProps<'Register'>> = ({
     </View>
   );
 };
+
+export const Register = connect(
+  (state: {
+    organizations: FetchState<APIOrgQueryResponse>;
+    userData: UserData;
+  }) => ({
+    organizations: state.organizations,
+    userData: state.userData
+  })
+)(_Register);

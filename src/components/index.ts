@@ -4,3 +4,4 @@ export * from './REPTextInput';
 export * from './REPButton';
 export * from './REPLink';
 export * from './REPText';
+export * from './REPModal';

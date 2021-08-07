@@ -1,4 +1,5 @@
 export interface AuthProps {
   authenticated?: boolean;
   status?: 'settled' | 'pending' | 'fulfilled';
+  err?: boolean;
 }

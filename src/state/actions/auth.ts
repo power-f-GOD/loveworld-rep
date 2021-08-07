@@ -1,30 +1,43 @@
 import * as SecureStore from 'expo-secure-store';
-import { USER_AUTHENTICATE, USER_SIGNIN, USER_SIGNOUT } from 'src/constants';
-import { AuthProps, ActionProps, HttpStatusProps } from 'src/types';
-import { dispatch } from '../store';
+import {
+  USER_AUTHENTICATE,
+  USER_SIGNIN,
+  USER_SIGNOUT,
+  ORGANIZATIONS_FETCH
+} from 'src/constants';
+import {
+  AuthProps,
+  ActionProps,
+  HttpStatusProps,
+  APIBaseResponse,
+  APIAuthResponse,
+  SigninProps,
+  RegisterProps,
+  APIOrgQueryResponse,
+  FetchState,
+  UserData
+} from 'src/types';
+import { Http, logError } from 'src/utils';
+import { displaySnackbar, setUserData } from './app';
 
 export const verifyAuth = () => (dispatch: Function) => {
   dispatch(auth({ status: 'pending' }));
 
   const verify = async () => {
-    let userToken: string | null;
+    let accessToken: string | null;
+    let userData: UserData;
 
     try {
-      userToken = await SecureStore.getItemAsync('userToken');
+      accessToken = await SecureStore.getItemAsync('accessToken');
+      userData = JSON.parse((await SecureStore.getItemAsync('userData')) || '');
+      Http.token = accessToken;
 
-      // if (userToken) {
-      //   // http.token = userData.token!;
-      //   dispatch(auth({ status: 'fulfilled', isAuthenticated: true }));
-      //   // dispatch(signin({ status: 'fulfilled', err: false }));
-      // } else {
-      //   dispatch(auth({ status: 'fulfilled', isAuthenticated: false }));
-      //   // dispatch(signin({ status: 'fulfilled', err: true }));
-      // }
-
-      dispatch(auth({ status: 'fulfilled', authenticated: !!userToken }));
-      dispatch(signin({ status: 'fulfilled', err: !userToken }));
+      dispatch(auth({ status: 'fulfilled', authenticated: !!accessToken }));
+      dispatch(signin({ status: 'fulfilled', err: !accessToken }));
+      dispatch(setUserData(userData));
     } catch (e) {
       // Restoring token failed
+      dispatch(auth({ status: 'settled', err: true }));
     }
   };
 
@@ -38,11 +51,28 @@ export const auth = (payload: AuthProps): ActionProps<AuthProps> => {
   };
 };
 
-export const triggerSignin = (payload?: HttpStatusProps) => () => {
-  dispatch(auth({ status: 'pending' }));
-  setTimeout(() => {
-    dispatch(auth({ status: 'fulfilled', authenticated: true }));
-  }, 2000);
+export const triggerSignin = (payload: SigninProps) => (
+  dispatch: (arg: any) => {}
+) => {
+  dispatch(auth({ status: 'pending', err: false }));
+  dispatch(setUserData(payload));
+
+  Http.post<APIAuthResponse>('/auth/login', payload)
+    .then(({ data, message }) => {
+      dispatch(auth({ status: 'fulfilled', authenticated: !!data }));
+
+      if (!data) {
+        return dispatch(
+          displaySnackbar({ message: `Login: ${message}`, open: true })
+        );
+      }
+
+      SecureStore.setItemAsync('accessToken', data.access_token);
+      SecureStore.setItemAsync('userData', JSON.stringify(data.user));
+      Http.token = data.access_token;
+      dispatch(setUserData(data.user));
+    })
+    .catch(logError(auth));
 };
 
 export const signin = (
@@ -54,24 +84,71 @@ export const signin = (
   };
 };
 
-export const triggerRegister = (payload?: HttpStatusProps) => () => {
-  dispatch(auth({ status: 'pending' }));
-  setTimeout(() => {
-    dispatch(auth({ status: 'fulfilled', authenticated: true }));
-  }, 2000);
+export const triggerRegister = (payload: RegisterProps) => (
+  dispatch: (arg: any) => {}
+) => {
+  dispatch(auth({ status: 'pending', err: false }));
+  dispatch(setUserData(payload));
+
+  Http.post<APIAuthResponse>('/auth/register', payload)
+    .then(({ data, message }) => {
+      dispatch(auth({ status: 'fulfilled', authenticated: !!data }));
+
+      if (!data) {
+        return dispatch(
+          displaySnackbar({ message: `Registration: ${message}`, open: true })
+        );
+      }
+
+      SecureStore.setItemAsync('accessToken', data.access_token);
+      SecureStore.setItemAsync('userData', JSON.stringify(data.user));
+      Http.token = data.access_token;
+      dispatch(setUserData(data.user));
+    })
+    .catch(logError(auth));
 };
 
-export const triggerSignout = () => () => {
-  dispatch(signout({ status: 'fulfilled' }));
+export const triggerSignout = () => (dispatch: (arg: any) => {}) => {
+  Http.token = null;
+  SecureStore.deleteItemAsync('accessToken');
+  dispatch(signout());
 };
 
-export const signout = (
-  payload: HttpStatusProps
-): ActionProps<HttpStatusProps> => {
-  dispatch(auth({ authenticated: false }));
-
+export const signout = (): ActionProps<HttpStatusProps> => {
   return {
-    type: USER_SIGNOUT,
+    type: USER_SIGNOUT
+  };
+};
+
+export const fetchOrganizations = (keyword?: string) => (
+  dispatch: (arg: any) => {}
+) => {
+  if (!keyword?.trim()) {
+    return;
+  }
+
+  dispatch(organizations({ status: 'pending', err: false }));
+
+  Http.get<APIOrgQueryResponse>(`/org/query?keyword=${keyword || ''}`)
+    .then(({ data, message }) => {
+      dispatch(
+        organizations({ status: 'fulfilled', err: !data, data: data || [] })
+      );
+
+      if (!data) {
+        dispatch(
+          displaySnackbar({ message: `Church: ${message}`, open: true })
+        );
+      }
+    })
+    .catch(logError(organizations));
+};
+
+export const organizations = (
+  payload: FetchState<APIOrgQueryResponse>
+): ActionProps<FetchState<APIOrgQueryResponse>> => {
+  return {
+    type: ORGANIZATIONS_FETCH,
     payload
   };
 };

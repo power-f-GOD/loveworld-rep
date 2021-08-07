@@ -33,7 +33,7 @@ export const authStyles = StyleSheet.create({
   actionButtonRider: {
     flexDirection: 'row',
     width: '100%',
-    marginTop: 15,
+    marginTop: 25,
     marginBottom: '15%',
     justifyContent: 'center'
   }

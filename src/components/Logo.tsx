@@ -6,17 +6,19 @@ import { REPAnimate } from './REPAnimate';
 export const Logo: FC<{
   style?: StyleProp<ViewStyle>;
   animate?: boolean;
-}> = ({ style, animate }) => {
+  loopAnimation?: boolean;
+}> = ({ style, animate, loopAnimation }) => {
   return (
     <View style={[S.Logo, style ? style : {}]}>
       <View style={S.boxGrid}>
         <REPAnimate
           style={S.box}
           type='scale'
-          delay={0}
+          delay={100}
           duration={500}
           noAnimate={!animate}
-          magnitude={1.5}>
+          magnitude={1.5}
+          loop={loopAnimation}>
           <View style={[S.box, S.redBox]} />
           <View style={[S.box, S.greenBox]} />
           <View style={[S.box, S.blueBox]} />
