@@ -1,18 +1,13 @@
-import React, { memo, FC, useEffect } from 'react';
+import React, { FC, useEffect } from 'react';
 import { View, ScrollView, StyleSheet } from 'react-native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { Button } from 'react-native-paper';
 import MaterialIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
-import { dispatch, triggerSignout, fetchEvents } from 'src/state';
+import { dispatch, fetchEvents } from 'src/state';
 import { mainStyles } from 'src/styles';
 import { fonts, colors, space } from 'src/constants';
 import { REPText } from 'src/components';
 import { connect } from 'react-redux';
 import { UserData, FetchState, APIEventsResponse } from 'src/types';
-// import { NavigationContainer } from '@react-navigation/native';
-
-// const Stack = createNativeStackNavigator();
 
 const _Dashboard: FC<{ userData: UserData; numEvents: number }> = ({
   userData,
@@ -108,15 +103,6 @@ const _Dashboard: FC<{ userData: UserData; numEvents: number }> = ({
           borderColor: '#ddd',
           borderWidth: 1
         }}></View>
-      <Button
-        mode='contained'
-        color='black'
-        style={{ marginTop: 10 }}
-        onPress={() => {
-          dispatch(triggerSignout());
-        }}>
-        LOGOUT
-      </Button>
     </ScrollView>
   );
 };

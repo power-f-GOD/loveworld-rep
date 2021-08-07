@@ -1,19 +1,50 @@
-import React, { memo, FC, useEffect } from 'react';
-import { View, Text, ScrollView, StyleSheet, Image } from 'react-native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import React, { FC, useCallback } from 'react';
+import { View, ScrollView, StyleSheet, Image } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
-import { dispatch, triggerSignout, displayModal } from 'src/state';
+import { dispatch, displayModal } from 'src/state';
 import { mainStyles } from 'src/styles';
 import { REPText, REPAnimate } from 'src/components';
 import { fonts, space, colors } from 'src/constants';
 import { FetchState, APIEventsResponse } from 'src/types';
 import { connect } from 'react-redux';
-import { fetchEvents } from 'src/state';
 import { Button } from 'react-native-paper';
 
 const _Events: FC<{ events: FetchState<APIEventsResponse> }> = ({ events }) => {
   const { data: eventsData, status: eventsStatus } = events;
+
+  const handleEventDetailsPress = useCallback(
+    (event: APIEventsResponse[0], imageSrc: any) => () => {
+      dispatch(
+        displayModal({
+          open: true,
+          title: `Event: ${event.title}` as any,
+          children: [
+            <REPAnimate magnitude={space.xs} key='0'>
+              <EventMainInfo event={event} />
+
+              <Image
+                style={[
+                  S.banner,
+                  {
+                    width: '100%',
+                    minHeight: 200,
+                    marginVertical: space.sm
+                  }
+                ]}
+                source={imageSrc}
+              />
+
+              <REPText size={space.xs + 4} color={colors.grey}>
+                More info and actions would appear here...
+              </REPText>
+            </REPAnimate>
+          ]
+        })
+      );
+    },
+    []
+  );
 
   return (
     <ScrollView style={mainStyles.Tab}>
@@ -44,82 +75,36 @@ const _Events: FC<{ events: FetchState<APIEventsResponse> }> = ({ events }) => {
               marginTop: space.xs
             }}>
             <View style={[S.eventCard, {}]}>
-              <Image
+              <View
                 style={[
-                  S.banner,
                   {
+                    width: space.xl,
                     borderRadius: space.xs,
-                    maxHeight: 100,
-                    alignSelf: 'stretch'
+                    borderColor: '#eee'
                   }
-                ]}
-                source={imageSrc}
-              />
+                ]}>
+                <Image
+                  style={[
+                    S.banner,
+                    {
+                      borderRadius: space.xs,
+                      width: '100%',
+                      alignSelf: 'stretch'
+                    }
+                  ]}
+                  source={imageSrc}
+                />
+              </View>
 
-              <View style={{ marginLeft: space.xs + 2 }}>
-                <View style={{ flexDirection: 'row' }}>
-                  <REPText
-                    size={fonts.h4.fontSize}
-                    bold
-                    style={{ flex: 1, flexWrap: 'wrap' }}>
-                    {event.title}
-                  </REPText>
-                </View>
-
-                <View style={{ flexDirection: 'row' }}>
-                  <MaterialIcons
-                    name='map-marker'
-                    color={colors.grey}
-                    style={S.icon}
-                  />
-                  <REPText size={space.xs + 4} color={colors.grey}>
-                    {event.organization.name}
-                  </REPText>
-                </View>
+              <View style={{ marginLeft: space.xs + 2, flex: 1 }}>
+                <EventMainInfo event={event} renderTitle />
 
                 <Button
                   mode='outlined'
                   color={colors.green}
                   style={{ flex: 1, width: '100%', marginTop: 10 }}
                   contentStyle={{ width: '100%' }}
-                  onPress={() =>
-                    dispatch(
-                      displayModal({
-                        open: true,
-                        title: `Event: ${event.title}` as any,
-                        children: [
-                          <REPAnimate magnitude={space.xs} key='0'>
-                            <View style={{ flexDirection: 'row' }}>
-                              <MaterialIcons
-                                name='map-marker'
-                                color={colors.grey}
-                                style={S.icon}
-                              />
-                              <REPText size={space.xs + 4} color={colors.grey}>
-                                {event.organization.name}
-                              </REPText>
-                            </View>
-
-                            <Image
-                              style={[
-                                S.banner,
-                                {
-                                  width: '100%',
-                                  minHeight: 200,
-                                  marginVertical: space.sm
-                                }
-                              ]}
-                              source={imageSrc}
-                            />
-
-                            <REPText size={space.xs + 4} color={colors.grey}>
-                              More info and actions would appear here...
-                            </REPText>
-                          </REPAnimate>
-                        ]
-                      })
-                    )
-                  }>
+                  onPress={handleEventDetailsPress(event, imageSrc)}>
                   Details
                 </Button>
               </View>
@@ -128,6 +113,61 @@ const _Events: FC<{ events: FetchState<APIEventsResponse> }> = ({ events }) => {
         );
       })}
     </ScrollView>
+  );
+};
+
+const EventMainInfo: FC<{
+  event: APIEventsResponse[0];
+  renderTitle?: boolean;
+}> = ({ event, renderTitle }) => {
+  return (
+    <>
+      {renderTitle && (
+        <View style={{ flexDirection: 'row' }}>
+          <REPText
+            size={fonts.h4.fontSize}
+            bold
+            style={{ flex: 1, flexWrap: 'wrap' }}>
+            {event.title}
+          </REPText>
+        </View>
+      )}
+
+      <View style={{ flexDirection: 'row' }}>
+        <MaterialIcons name='map-marker' color={colors.grey} style={S.icon} />
+        <REPText size={space.xs + 4} color={colors.grey}>
+          {event.organization.name}
+        </REPText>
+      </View>
+
+      <View
+        style={{
+          flexDirection: 'row',
+          flex: 1,
+          flexWrap: 'wrap'
+        }}>
+        <View style={{ flexDirection: 'row', marginRight: space.sm }}>
+          <MaterialIcons name='calendar' color={colors.grey} style={S.icon} />
+          <REPText size={space.xs + 4} color={colors.grey}>
+            {new Date(event.date).toDateString()}
+          </REPText>
+        </View>
+        <View style={{ flexDirection: 'row' }}>
+          <MaterialIcons name='timer' color={colors.grey} style={S.icon} />
+          <REPText size={space.xs + 4} color={colors.grey}>
+            {new Date(event.date).getHours()}:00
+          </REPText>
+        </View>
+      </View>
+
+      <View style={{ flexDirection: 'row' }}>
+        <MaterialIcons name='timer-sand' color={colors.grey} style={S.icon} />
+        <REPText size={space.xs + 4} color={colors.grey} bold>
+          {Math.floor((event.date - Date.now()) / (1000 * 60 * 60 * 24))} days
+          away
+        </REPText>
+      </View>
+    </>
   );
 };
 
@@ -147,8 +187,11 @@ const S = StyleSheet.create({
     backgroundColor: colors.white
   },
   banner: {
-    minWidth: space.xl,
-    flex: 0.25,
+    // minWidth: space.xl,
+    flex: 1,
+    height: '100%',
+    flexGrow: 1,
+    maxWidth: '100%',
     borderRadius: space.xs,
     borderWidth: 1,
     borderColor: '#eee'

@@ -1,6 +1,5 @@
 import React from 'react';
-import { View, StyleSheet, Dimensions } from 'react-native';
-import { View as MotiView } from 'moti';
+import { View, StyleSheet } from 'react-native';
 
 import { Logo } from 'src/components';
 import { colors, space } from 'src/constants';

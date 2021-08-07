@@ -1,14 +1,5 @@
-import React, { useRef, useEffect, useState, FC } from 'react';
-import {
-  View,
-  StyleSheet,
-  Dimensions,
-  Animated,
-  TextInput,
-  ScrollView
-} from 'react-native';
-import { View as MotiView } from 'moti';
-import { Button } from 'react-native-paper';
+import React, { useState, FC } from 'react';
+import { View, ScrollView } from 'react-native';
 
 import {
   Logo,
@@ -18,23 +9,19 @@ import {
   REPText,
   REPLink
 } from 'src/components';
-import { colors, fonts, space } from 'src/constants';
+import { fonts, space } from 'src/constants';
 import { REPStackScreenProps, UserData } from 'src/types';
-import {
-  dispatch,
-  signin,
-  auth,
-  triggerSignin,
-  displaySnackbar
-} from 'src/state';
+import { dispatch, triggerSignin, displaySnackbar } from 'src/state';
 import { authStyles } from 'src/styles';
 import { connect } from 'react-redux';
 
 export const _Login: FC<
   REPStackScreenProps<'Login'> & { userData: UserData }
 > = ({ navigation, userData }) => {
-  const [email, setEmail] = useState(userData.email || '');
-  const [password, setPassword] = useState(userData.password || '');
+  const [email, setEmail] = useState(
+    'nuel.mailbox@gmail.com' || userData.email
+  );
+  const [password, setPassword] = useState('123123123' || userData.password);
 
   return (
     <View style={authStyles.Auth}>

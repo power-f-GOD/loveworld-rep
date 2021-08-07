@@ -13,7 +13,9 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true
     },
@@ -25,6 +27,8 @@
     },
     "web": {
       "favicon": "src/assets/favicon.png"
-    }
+    },
+    "description": "An app (belonging to Loveworld Inc.) with REP (management) capabilities for ministry/church members records management, ministry/church events/programs management, ministry/church projects management.",
+    "githubUrl": "https://github.com/power-f-GOD/loveworld-rep"
   }
 }

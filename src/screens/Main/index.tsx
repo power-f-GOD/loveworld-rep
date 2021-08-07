@@ -1,5 +1,5 @@
 import React, { FC, useState, useEffect } from 'react';
-import { Appbar, FAB } from 'react-native-paper';
+import { Appbar, FAB, Menu } from 'react-native-paper';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 import MaterialIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
@@ -9,10 +9,10 @@ import { Records } from './Records';
 import { Events } from './Events';
 import { Projects } from './Projects';
 import { Logo, REPText, REPAnimate } from 'src/components';
-import { colors } from 'src/constants';
+import { colors, space } from 'src/constants';
 import { connect } from 'react-redux';
 import { useAnimationState, MotiView } from 'moti';
-import { dispatch, displayModal } from 'src/state';
+import { dispatch, displayModal, triggerSignout } from 'src/state';
 
 const Tab = createMaterialBottomTabNavigator();
 
@@ -25,6 +25,7 @@ const _Main: FC<REPStackScreenProps<'Main'> & { userData: UserData }> = ({
   const currentTabIsDash = currentTab === 'Dashboard';
   const is_admin = userData.is_admin;
   let barColor = colors.black;
+  const [openMenu, setOpenMenu] = useState(false);
   const FABAnimState = useAnimationState({
     from: {
       opacity: 0,
@@ -78,7 +79,25 @@ const _Main: FC<REPStackScreenProps<'Main'> & { userData: UserData }> = ({
             ADMIN
           </REPText>
         )}
-        <Appbar.Action icon='account-circle' />
+
+        <Menu
+          visible={openMenu}
+          style={{ marginTop: space.md }}
+          onDismiss={() => setOpenMenu(false)}
+          anchor={
+            <Appbar.Action
+              icon='account-circle'
+              onPress={() => setOpenMenu(true)}
+            />
+          }>
+          {/* <Menu.Item onPress={() => {}} title='Item 2' /> */}
+          {/* <Divider /> */}
+          <Menu.Item
+            onPress={() => dispatch(triggerSignout())}
+            title='Log out'
+            icon='logout'
+          />
+        </Menu>
       </Appbar.Header>
       <Tab.Navigator
         barStyle={{ backgroundColor: barColor }}
@@ -128,40 +147,39 @@ const _Main: FC<REPStackScreenProps<'Main'> & { userData: UserData }> = ({
           }}
         />
       </Tab.Navigator>
-      {
-        <MotiView
-          state={FABAnimState}
-          pointerEvents={currentTabIsDash ? 'none' : undefined}
+
+      <MotiView
+        state={FABAnimState}
+        pointerEvents={currentTabIsDash ? 'none' : undefined}
+        style={{
+          position: 'absolute',
+          margin: 16,
+          right: 0,
+          bottom: 50
+        }}
+        transition={{ type: 'timing', duration: 300 }}>
+        <FAB
           style={{
-            position: 'absolute',
-            margin: 16,
-            right: 0,
-            bottom: 50
+            backgroundColor: barColor
           }}
-          transition={{ type: 'timing', duration: 300 }}>
-          <FAB
-            style={{
-              backgroundColor: barColor
-            }}
-            icon='plus'
-            onPress={() =>
-              dispatch(
-                displayModal({
-                  open: true,
-                  title: `${
-                    currentTab === 'Records' ? 'Add' : 'Create'
-                  } ${currentTab.replace(/s$/, '')}` as any,
-                  children: [
-                    <REPAnimate magnitude={0} key={0}>
-                      <REPText>COMING SOON!</REPText>
-                    </REPAnimate>
-                  ]
-                })
-              )
-            }
-          />
-        </MotiView>
-      }
+          icon='plus'
+          onPress={() =>
+            dispatch(
+              displayModal({
+                open: true,
+                title: `${
+                  currentTab === 'Records' ? 'Add' : 'Create'
+                } ${currentTab.replace(/s$/, '')}` as any,
+                children: [
+                  <REPAnimate magnitude={0} key={0}>
+                    <REPText>COMING SOON!</REPText>
+                  </REPAnimate>
+                ]
+              })
+            )
+          }
+        />
+      </MotiView>
     </>
   );
 };

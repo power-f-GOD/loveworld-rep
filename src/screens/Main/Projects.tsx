@@ -1,14 +1,9 @@
 import React, { memo } from 'react';
-import { View, Text, Button, ScrollView } from 'react-native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { ScrollView } from 'react-native';
 
-import { dispatch, triggerSignout } from 'src/state';
 import { mainStyles } from 'src/styles';
 import { REPText } from 'src/components';
 import { fonts } from 'src/constants';
-// import { NavigationContainer } from '@react-navigation/native';
-
-// const Stack = createNativeStackNavigator();
 
 const _Projects = () => {
   return (
