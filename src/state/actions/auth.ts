@@ -17,7 +17,7 @@ import {
   FetchState,
   UserData
 } from 'src/types';
-import { Http, logError } from 'src/utils';
+import { Http, logHttpError } from 'src/utils';
 import { displaySnackbar, setUserData } from './app';
 
 export const verifyAuth = () => (dispatch: Function) => {
@@ -80,7 +80,7 @@ export const triggerSignin = (payload: SigninProps) => (
         })
       );
     })
-    .catch(logError(auth));
+    .catch(logHttpError(auth));
 };
 
 export const signin = (
@@ -121,7 +121,7 @@ export const triggerRegister = (payload: RegisterProps) => (
         })
       );
     })
-    .catch(logError(auth));
+    .catch(logHttpError(auth));
 };
 
 export const fetchAccount = () => (dispatch: (arg: any) => {}) => {
@@ -141,15 +141,15 @@ export const fetchAccount = () => (dispatch: (arg: any) => {}) => {
         );
       }
 
-      SecureStore.setItemAsync('userData', JSON.stringify(data.user));
-      dispatch(
-        setUserData({
-          ...data.user,
-          is_admin: data.user._id === data.user.organization?.admin
-        })
-      );
+      const userData = {
+        ...data.user,
+        is_admin: data.user._id === data.user.organization?.admin
+      };
+
+      SecureStore.setItemAsync('userData', JSON.stringify(userData));
+      dispatch(setUserData(userData));
     })
-    .catch(logError(signin));
+    .catch(logHttpError(signin));
 };
 
 export const triggerSignout = () => (dispatch: (arg: any) => {}) => {
@@ -185,7 +185,7 @@ export const fetchOrganizations = (keyword?: string) => (
         );
       }
     })
-    .catch(logError(organizations));
+    .catch(logHttpError(organizations));
 };
 
 export const organizations = (

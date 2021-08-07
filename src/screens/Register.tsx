@@ -32,9 +32,9 @@ const _Register: FC<
     userData: UserData;
   }
 > = ({ navigation, organizations: _orgs, userData }) => {
-  const [full_name, setFullname] = useState(userData.full_name || '');
-  const [email, setEmail] = useState(userData.email || '');
-  const [password, setPassword] = useState(userData.password || '');
+  const [full_name, setFullname] = useState('' || userData.full_name || '');
+  const [email, setEmail] = useState('' || userData.email || '');
+  const [password, setPassword] = useState('' || userData.password || '');
   const [org, setOrg] = useState({ name: '', id: '' });
   const { data: orgsData, status: orgsStatus } = _orgs;
 

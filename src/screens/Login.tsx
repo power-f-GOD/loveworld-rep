@@ -18,10 +18,8 @@ import { connect } from 'react-redux';
 export const _Login: FC<
   REPStackScreenProps<'Login'> & { userData: UserData }
 > = ({ navigation, userData }) => {
-  const [email, setEmail] = useState(
-    'nuel.mailbox@gmail.com' || userData.email
-  );
-  const [password, setPassword] = useState('123123123' || userData.password);
+  const [email, setEmail] = useState('' || userData.email);
+  const [password, setPassword] = useState('' || userData.password);
 
   return (
     <View style={authStyles.Auth}>

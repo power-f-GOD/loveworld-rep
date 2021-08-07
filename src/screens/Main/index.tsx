@@ -43,7 +43,7 @@ const _Main: FC<REPStackScreenProps<'Main'> & { userData: UserData }> = ({
         ? 'from'
         : 'to'
     );
-  }, [currentTabIsDash, is_admin]);
+  }, [currentTab, currentTabIsDash, is_admin]);
 
   switch (currentTab) {
     case 'Records':
@@ -99,6 +99,7 @@ const _Main: FC<REPStackScreenProps<'Main'> & { userData: UserData }> = ({
           />
         </Menu>
       </Appbar.Header>
+
       <Tab.Navigator
         barStyle={{ backgroundColor: barColor }}
         screenListeners={{

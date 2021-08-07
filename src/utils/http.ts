@@ -60,7 +60,7 @@ export class Http {
   }
 }
 
-export const logError = (action: any) => (error: Error) => {
+export const logHttpError = (action: any) => (error: Error) => {
   let message = /network|connect|internet/i.test(error.message)
     ? 'A network error occurred. Check your internet connection'
     : error.message;
@@ -74,13 +74,15 @@ export const logError = (action: any) => (error: Error) => {
   dispatch(
     displaySnackbar({
       open: true,
-      message: navigator.onLine
-        ? `${message[0].toUpperCase()}${message.slice(1)}.`
-        : 'You are offline.',
-      severity:
-        navigator.onLine && !/network|connect|internet/i.test(message)
-          ? 'error'
-          : 'info'
+      // message: navigator.onLine
+      //   ? `${message[0].toUpperCase()}${message.slice(1)}.`
+      //   : 'You are offline.',
+      // severity:
+      //   navigator.onLine && !/network|connect|internet/i.test(message)
+      //     ? 'error'
+      //     : 'info'
+      message: `${message[0].toUpperCase()}${message.slice(1)}.`,
+      severity: 'info'
     })
   );
 

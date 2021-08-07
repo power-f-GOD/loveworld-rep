@@ -5,7 +5,7 @@ import MaterialIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { dispatch, fetchEvents } from 'src/state';
 import { mainStyles } from 'src/styles';
 import { fonts, colors, space } from 'src/constants';
-import { REPText } from 'src/components';
+import { REPText, REPAnimate } from 'src/components';
 import { connect } from 'react-redux';
 import { UserData, FetchState, APIEventsResponse } from 'src/types';
 
@@ -33,66 +33,68 @@ const _Dashboard: FC<{ userData: UserData; numEvents: number }> = ({
         horizontal={true}
         showsHorizontalScrollIndicator={false}
         snapToStart>
-        <View style={[S.box, S.box1]}>
-          <REPText
-            style={S.boxText}
-            size={fonts.h1.fontSize + 5}
-            color={colors.white}
-            bold>
-            0
-          </REPText>
-          <View style={S.boxCircle}>
-            {/* <REPText
+        <REPAnimate>
+          <View style={[S.box, S.box1]}>
+            <REPText
+              style={S.boxText}
+              size={fonts.h1.fontSize + 5}
+              color={colors.white}
+              bold>
+              0
+            </REPText>
+            <View style={S.boxCircle}>
+              {/* <REPText
               style={S.boxCircleText}
               size={fonts.h2.fontSize}
               color={colors.white}
               bold>
               R
             </REPText> */}
-            <MaterialIcons
-              name='database'
-              color={'white'}
-              size={space.md}
-              style={[S.boxIcon]}
-            />
+              <MaterialIcons
+                name='database'
+                color={'white'}
+                size={space.md}
+                style={[S.boxIcon]}
+              />
+            </View>
           </View>
-        </View>
 
-        <View style={[S.box, S.box2]}>
-          <REPText
-            style={S.boxText}
-            size={fonts.h1.fontSize + 5}
-            color={colors.white}
-            bold>
-            {numEvents}
-          </REPText>
-          <View style={S.boxCircle}>
-            <MaterialIcons
-              name='calendar-month'
-              color={'white'}
-              size={space.md}
-              style={[S.boxIcon]}
-            />
+          <View style={[S.box, S.box2]}>
+            <REPText
+              style={S.boxText}
+              size={fonts.h1.fontSize + 5}
+              color={colors.white}
+              bold>
+              {numEvents}
+            </REPText>
+            <View style={S.boxCircle}>
+              <MaterialIcons
+                name='calendar-month'
+                color={'white'}
+                size={space.md}
+                style={[S.boxIcon]}
+              />
+            </View>
           </View>
-        </View>
 
-        <View style={[S.box, S.box3]}>
-          <REPText
-            style={S.boxText}
-            size={fonts.h1.fontSize + 5}
-            color={colors.white}
-            bold>
-            0
-          </REPText>
-          <View style={S.boxCircle}>
-            <MaterialIcons
-              name='cash'
-              color={'white'}
-              size={space.md}
-              style={[S.boxIcon]}
-            />
+          <View style={[S.box, S.box3]}>
+            <REPText
+              style={S.boxText}
+              size={fonts.h1.fontSize + 5}
+              color={colors.white}
+              bold>
+              0
+            </REPText>
+            <View style={S.boxCircle}>
+              <MaterialIcons
+                name='cash'
+                color={'white'}
+                size={space.md}
+                style={[S.boxIcon]}
+              />
+            </View>
           </View>
-        </View>
+        </REPAnimate>
       </ScrollView>
       <View
         style={{

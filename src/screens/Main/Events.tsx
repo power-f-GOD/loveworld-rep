@@ -8,7 +8,7 @@ import { REPText, REPAnimate } from 'src/components';
 import { fonts, space, colors } from 'src/constants';
 import { FetchState, APIEventsResponse } from 'src/types';
 import { connect } from 'react-redux';
-import { Button } from 'react-native-paper';
+import { Button, Surface } from 'react-native-paper';
 
 const _Events: FC<{ events: FetchState<APIEventsResponse> }> = ({ events }) => {
   const { data: eventsData, status: eventsStatus } = events;
@@ -72,7 +72,7 @@ const _Events: FC<{ events: FetchState<APIEventsResponse> }> = ({ events }) => {
             magnitude={space.sm}
             delay={200 * i}
             style={{
-              marginTop: space.xs
+              marginTop: space.xs + 2
             }}>
             <View style={[S.eventCard, {}]}>
               <View
@@ -183,7 +183,9 @@ const S = StyleSheet.create({
     borderRadius: space.xs,
     flexDirection: 'row',
     borderWidth: 1,
-    borderColor: '#ddd',
+    borderColor: '#eee',
+    borderBottomWidth: 3,
+    borderBottomColor: '#ddd',
     backgroundColor: colors.white
   },
   banner: {

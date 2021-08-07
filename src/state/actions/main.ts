@@ -18,7 +18,7 @@ import {
   UserData,
   APIEventsResponse
 } from 'src/types';
-import { Http, logError } from 'src/utils';
+import { Http, logHttpError } from 'src/utils';
 import { displaySnackbar, setUserData } from './app';
 import { EVENTS_FETCH } from 'src/constants/main';
 
@@ -39,7 +39,7 @@ export const fetchEvents = () => (dispatch: (arg: any) => {}) => {
 
       dispatch(events({ status: 'fulfilled', err: !data, data: data || [] }));
     })
-    .catch(logError(events));
+    .catch(logHttpError(events));
 };
 
 export const events = (
