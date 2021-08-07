@@ -13,7 +13,7 @@ export const userDataState: UserData = {
   updatedAt: '',
   __v: 0,
   created_at: '',
-  organization: '',
+  organization: {},
   updated_at: ''
 };
 
@@ -21,7 +21,7 @@ export const snackbarState: REPSnackbarProps = {
   open: false,
   message: ' ',
   severity: 'info',
-  duration: 5000
+  duration: 4000
   // autoHide: false
 };
 

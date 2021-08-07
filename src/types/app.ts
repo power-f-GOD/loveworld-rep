@@ -1,4 +1,10 @@
 import { ReactNode } from 'react';
+import { APIAuthResponse } from '.';
+
+export type UserData = APIAuthResponse['user'] & {
+  password?: string;
+  is_admin?: boolean;
+};
 
 export interface HttpStatusProps {
   status?: 'settled' | 'pending' | 'fulfilled';

@@ -56,7 +56,7 @@ export const REPAnimate: FC<{
           delay:
             animationDelay !== undefined
               ? animationDelay
-              : (delay || 0) + 125 * (i + 3),
+              : (delay || 0) + 125 * i,
           duration:
             animationDuration !== undefined
               ? animationDuration

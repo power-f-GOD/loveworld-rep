@@ -19,6 +19,7 @@ import { displayModal, fetchOrganizations } from 'src/state/actions';
 import { colors, space, fonts } from 'src/constants';
 import { REPAnimate } from './REPAnimate';
 import { REPText } from './REPText';
+import { ScrollView } from 'react-native-gesture-handler';
 
 let searchTimeout: NodeJS.Timeout;
 
@@ -42,15 +43,15 @@ const _REPModal: FC<{
         visible={!!modal.open}
         dismissable
         onDismiss={() => dispatch(displayModal({ open: false }))}
-        style={{ padding: space.sm + 5 }}
+        style={{ padding: space.sm }}
         contentContainerStyle={{
-          padding: space.sm + 10,
+          padding: space.sm + 5,
           backgroundColor: colors.white,
           borderRadius: space.xs,
           maxHeight: '80%'
         }}>
         <REPText
-          size={fonts.h2.fontSize}
+          size={fonts.h3.fontSize}
           style={{ marginBottom: space.xs }}
           bold>
           {modal.title || 'Modal'}
@@ -61,8 +62,11 @@ const _REPModal: FC<{
               placeholder='Enter keyword...'
               onChangeText={onChangeSearch}
               value={searchQuery}
+              inputStyle={{
+                fontSize: 15
+              }}
             />
-            <REPText style={{ marginTop: 10 }}>
+            <REPText style={{ marginTop: 5, height: 20 }}>
               {searchStatus === 'pending' ? 'Finding Churches...' : ''}
             </REPText>
             {!modal.children?.length && (
@@ -89,7 +93,9 @@ const _REPModal: FC<{
             )}
           </>
         )}
-        <REPAnimate magnitude={10}>{modal.children}</REPAnimate>
+        <ScrollView>
+          <REPAnimate magnitude={10}>{modal.children}</REPAnimate>
+        </ScrollView>
       </Modal>
     </Portal>
   );

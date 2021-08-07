@@ -1,20 +1,29 @@
-import React, { memo, FC } from 'react';
+import React, { memo, FC, useEffect } from 'react';
 import { View, ScrollView, StyleSheet } from 'react-native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Button } from 'react-native-paper';
 import MaterialIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
-import { dispatch, triggerSignout } from 'src/state';
+import { dispatch, triggerSignout, fetchEvents } from 'src/state';
 import { mainStyles } from 'src/styles';
 import { fonts, colors, space } from 'src/constants';
 import { REPText } from 'src/components';
 import { connect } from 'react-redux';
-import { UserData } from 'src/types';
+import { UserData, FetchState, APIEventsResponse } from 'src/types';
 // import { NavigationContainer } from '@react-navigation/native';
 
 // const Stack = createNativeStackNavigator();
 
-const _Dashboard: FC<{ userData: UserData }> = ({ userData }) => {
+const _Dashboard: FC<{ userData: UserData; numEvents: number }> = ({
+  userData,
+  numEvents
+}) => {
+  useEffect(() => {
+    if (!numEvents) {
+      dispatch(fetchEvents());
+    }
+  }, [numEvents]);
+
   return (
     <ScrollView style={mainStyles.Tab}>
       <REPText
@@ -35,7 +44,7 @@ const _Dashboard: FC<{ userData: UserData }> = ({ userData }) => {
             size={fonts.h1.fontSize + 5}
             color={colors.white}
             bold>
-            17
+            0
           </REPText>
           <View style={S.boxCircle}>
             {/* <REPText
@@ -60,7 +69,7 @@ const _Dashboard: FC<{ userData: UserData }> = ({ userData }) => {
             size={fonts.h1.fontSize + 5}
             color={colors.white}
             bold>
-            2
+            {numEvents}
           </REPText>
           <View style={S.boxCircle}>
             <MaterialIcons
@@ -78,7 +87,7 @@ const _Dashboard: FC<{ userData: UserData }> = ({ userData }) => {
             size={fonts.h1.fontSize + 5}
             color={colors.white}
             bold>
-            8
+            0
           </REPText>
           <View style={S.boxCircle}>
             <MaterialIcons
@@ -90,6 +99,15 @@ const _Dashboard: FC<{ userData: UserData }> = ({ userData }) => {
           </View>
         </View>
       </ScrollView>
+      <View
+        style={{
+          height: space.xxl * 2,
+          marginVertical: space.md,
+          backgroundColor: colors.white,
+          borderRadius: space.xs,
+          borderColor: '#ddd',
+          borderWidth: 1
+        }}></View>
       <Button
         mode='contained'
         color='black'
@@ -103,9 +121,13 @@ const _Dashboard: FC<{ userData: UserData }> = ({ userData }) => {
   );
 };
 
-export const Dashboard = connect((state: { userData: UserData }) => ({
-  userData: state.userData
-}))(_Dashboard);
+export const Dashboard = connect(
+  (state: { userData: UserData; events: FetchState<APIEventsResponse> }) =>
+    ({
+      userData: state.userData,
+      numEvents: state.events.data?.length
+    } as any)
+)(_Dashboard);
 
 const boxSize = 105;
 

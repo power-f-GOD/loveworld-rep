@@ -3,7 +3,7 @@ import { colors, fonts } from 'src/constants';
 
 export const mainStyles = StyleSheet.create({
   Tab: {
-    backgroundColor: '#f4f4f4',
+    backgroundColor: '#f2f2f2',
     padding: '4%'
   },
   h1: {

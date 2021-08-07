@@ -42,7 +42,7 @@ const _App: FC<{
             snackbarMessage?.includes('Regist') ? 'Register' : undefined
           }>
           {(() => {
-            if (authStatus !== 'fulfilled' && !authErr) {
+            if (authStatus === 'pending' && !authErr) {
               return (
                 <Stack.Screen
                   name='Splash'

@@ -19,17 +19,23 @@ export interface APIAuthResponse {
     updatedAt: string;
     __v: number;
     created_at: string;
-    organization: string;
+    organization: Partial<APIOrgQueryResponse[0]['org_directory'][0]>;
     updated_at: string;
   }>;
   access_token: string;
 }
 
-export type UserData = APIAuthResponse['user'] & { password?: string };
-
 export type APIOrgQueryResponse = Array<{
   officials: string[];
-  org_directory: Array<APIOrgQueryResponse>;
+  org_directory: Array<{
+    officials: string[];
+    org_directory: string[];
+    _id: string;
+    admin: string;
+    office: 'zone' | 'group' | 'church';
+    name: string;
+    __v: number;
+  }>;
   _id: string;
   admin: string;
   office: string;

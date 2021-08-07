@@ -1,28 +1,48 @@
-import React, { FC, useEffect, useState } from 'react';
-import { View, Text, Button } from 'react-native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { StackScreenProps } from '@react-navigation/stack';
-import { BottomNavigation, Appbar } from 'react-native-paper';
-import { NavigationContainer } from '@react-navigation/native';
+import React, { FC, useState, useEffect } from 'react';
+import { Appbar, FAB } from 'react-native-paper';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 import MaterialIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
-import { dispatch, triggerSignout } from 'src/state';
 import { Dashboard } from './Dashboard';
-import { MainStackParamList, REPStackScreenProps } from 'src/types';
+import { MainStackParamList, REPStackScreenProps, UserData } from 'src/types';
 import { Records } from './Records';
 import { Events } from './Events';
 import { Projects } from './Projects';
-import { Logo } from 'src/components';
+import { Logo, REPText, REPAnimate } from 'src/components';
 import { colors } from 'src/constants';
+import { connect } from 'react-redux';
+import { useAnimationState, MotiView } from 'moti';
+import { dispatch, displayModal } from 'src/state';
 
 const Tab = createMaterialBottomTabNavigator();
 
-export const Main: FC<REPStackScreenProps<'Main'>> = ({ navigation }) => {
+const _Main: FC<REPStackScreenProps<'Main'> & { userData: UserData }> = ({
+  userData
+}) => {
   const [currentTab, setCurrentTab] = useState<keyof MainStackParamList>(
     'Dashboard'
   );
+  const currentTabIsDash = currentTab === 'Dashboard';
+  const is_admin = userData.is_admin;
   let barColor = colors.black;
+  const FABAnimState = useAnimationState({
+    from: {
+      opacity: 0,
+      scale: 0
+    },
+    to: {
+      opacity: 1,
+      scale: 1
+    }
+  });
+
+  useEffect(() => {
+    FABAnimState.transitionTo(
+      currentTabIsDash || (!is_admin && currentTab !== 'Records')
+        ? 'from'
+        : 'to'
+    );
+  }, [currentTabIsDash, is_admin]);
 
   switch (currentTab) {
     case 'Records':
@@ -53,7 +73,12 @@ export const Main: FC<REPStackScreenProps<'Main'>> = ({ navigation }) => {
           style={{ paddingStart: 0 }}
         />
         {/* <Appbar.Action icon="magnify" onPress={() => {}} /> */}
-        {/* <Appbar.Action icon='dots-vertical' onPress={() => {}} /> */}
+        {is_admin && (
+          <REPText color={colors.green} style={{ top: 2 }}>
+            ADMIN
+          </REPText>
+        )}
+        <Appbar.Action icon='account-circle' />
       </Appbar.Header>
       <Tab.Navigator
         barStyle={{ backgroundColor: barColor }}
@@ -103,6 +128,44 @@ export const Main: FC<REPStackScreenProps<'Main'>> = ({ navigation }) => {
           }}
         />
       </Tab.Navigator>
+      {
+        <MotiView
+          state={FABAnimState}
+          pointerEvents={currentTabIsDash ? 'none' : undefined}
+          style={{
+            position: 'absolute',
+            margin: 16,
+            right: 0,
+            bottom: 50
+          }}
+          transition={{ type: 'timing', duration: 300 }}>
+          <FAB
+            style={{
+              backgroundColor: barColor
+            }}
+            icon='plus'
+            onPress={() =>
+              dispatch(
+                displayModal({
+                  open: true,
+                  title: `${
+                    currentTab === 'Records' ? 'Add' : 'Create'
+                  } ${currentTab.replace(/s$/, '')}` as any,
+                  children: [
+                    <REPAnimate magnitude={0} key={0}>
+                      <REPText>COMING SOON!</REPText>
+                    </REPAnimate>
+                  ]
+                })
+              )
+            }
+          />
+        </MotiView>
+      }
     </>
   );
 };
+
+export const Main = connect((state: { userData: UserData }) => ({
+  userData: state.userData
+}))(_Main);

@@ -42,29 +42,31 @@ const _Register: FC<
     if (orgsStatus === 'fulfilled') {
       dispatch(
         displayModal({
-          children: orgsData?.map((org) => (
-            <TouchableNativeFeedback
-              onPress={() => {
-                dispatch(displayModal({ open: false }));
-                setOrg({ name: org.name, id: org._id });
-              }}
-              key={org._id}>
-              <View>
-                <List.Item
-                  title={org.name}
-                  description={`Category: ${
-                    org.office[0].toUpperCase() + org.office.slice(1)
-                  }`}
-                  left={(props) => (
-                    <List.Icon
-                      {...props}
-                      style={{ margin: 0 }}
-                      icon='map-marker'
-                    />
-                  )}></List.Item>
-              </View>
-            </TouchableNativeFeedback>
-          ))
+          children: orgsData?.map((org) => {
+            const zone = org.org_directory.find((org) => org.office === 'zone');
+
+            return (
+              <TouchableNativeFeedback
+                onPress={() => {
+                  dispatch(displayModal({ open: false }));
+                  setOrg({ name: org.name, id: org._id });
+                }}
+                key={org._id}>
+                <View>
+                  <List.Item
+                    title={org.name}
+                    description={`Zone: ${zone?.name || '...'}`}
+                    left={(props) => (
+                      <List.Icon
+                        {...props}
+                        style={{ margin: 0 }}
+                        icon='map-marker'
+                      />
+                    )}></List.Item>
+                </View>
+              </TouchableNativeFeedback>
+            );
+          })
         })
       );
     }

@@ -71,6 +71,14 @@ export const triggerSignin = (payload: SigninProps) => (
       SecureStore.setItemAsync('userData', JSON.stringify(data.user));
       Http.token = data.access_token;
       dispatch(setUserData(data.user));
+      dispatch(fetchAccount());
+      dispatch(
+        displaySnackbar({
+          message: `Welcome back, ${data.user.full_name?.split(' ')[0]}!`,
+          open: true,
+          severity: 'success'
+        })
+      );
     })
     .catch(logError(auth));
 };
@@ -88,7 +96,7 @@ export const triggerRegister = (payload: RegisterProps) => (
   dispatch: (arg: any) => {}
 ) => {
   dispatch(auth({ status: 'pending', err: false }));
-  dispatch(setUserData(payload));
+  dispatch(setUserData({ ...payload, organization: {} }));
 
   Http.post<APIAuthResponse>('/auth/register', payload)
     .then(({ data, message }) => {
@@ -104,8 +112,44 @@ export const triggerRegister = (payload: RegisterProps) => (
       SecureStore.setItemAsync('userData', JSON.stringify(data.user));
       Http.token = data.access_token;
       dispatch(setUserData(data.user));
+      dispatch(fetchAccount());
+      dispatch(
+        displaySnackbar({
+          message: `Welcome to REP, ${data.user.full_name?.split(' ')[0]}!`,
+          open: true,
+          severity: 'success'
+        })
+      );
     })
     .catch(logError(auth));
+};
+
+export const fetchAccount = () => (dispatch: (arg: any) => {}) => {
+  dispatch(signin({ status: 'pending', err: false }));
+
+  Http.get<APIAuthResponse>('/auth/account', true)
+    .then(({ data, message }) => {
+      dispatch(signin({ status: 'fulfilled', err: !data }));
+
+      if (!data) {
+        return dispatch(
+          displaySnackbar({
+            message: `Account: ${message}`,
+            open: true,
+            severity: 'info'
+          })
+        );
+      }
+
+      SecureStore.setItemAsync('userData', JSON.stringify(data.user));
+      dispatch(
+        setUserData({
+          ...data.user,
+          is_admin: data.user._id === data.user.organization?.admin
+        })
+      );
+    })
+    .catch(logError(signin));
 };
 
 export const triggerSignout = () => (dispatch: (arg: any) => {}) => {

@@ -33,7 +33,6 @@ import { connect } from 'react-redux';
 export const _Login: FC<
   REPStackScreenProps<'Login'> & { userData: UserData }
 > = ({ navigation, userData }) => {
-  const { width } = Dimensions.get('window');
   const [email, setEmail] = useState(userData.email || '');
   const [password, setPassword] = useState(userData.password || '');
 
@@ -52,7 +51,7 @@ export const _Login: FC<
             label='Email'
             value={email}
             style={{ marginTop: 50 }}
-            onChangeText={(email) => setEmail(email)}
+            onChangeText={(email) => setEmail(email.toLowerCase())}
           />
 
           <REPTextInput
