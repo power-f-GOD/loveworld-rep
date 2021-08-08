@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import { ReactChild } from 'react';
 import { APIAuthResponse } from '.';
 
 export type UserData = APIAuthResponse['user'] & {
@@ -37,6 +37,16 @@ export interface REPSnackbarProps {
 
 export interface REPModalProps {
   open?: boolean;
-  children?: ReactNode[];
-  title?: 'Find Church' | 'Modal';
+  children?: ReactChild[];
+  title?: 'Find Church' | 'Modal' | string;
+  fade?: boolean;
+  full?: boolean;
+}
+
+export interface REPActionSheetProps {
+  open?: boolean;
+  options?: Array<ReactChild | 'string'>;
+  title?: 'Find Church' | 'Modal' | string;
+  cancelIndex?: number;
+  destructiveIndex?: number;
 }

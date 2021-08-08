@@ -8,12 +8,6 @@ import { fonts } from 'src/constants';
 const _Projects = () => {
   return (
     <ScrollView style={mainStyles.Tab}>
-      <REPText
-        style={[fonts.h1, { lineHeight: fonts.h1.fontSize + 5 }]}
-        size={fonts.h1.fontSize}
-        bold>
-        Projects
-      </REPText>
       <REPText>Coming soon!</REPText>
     </ScrollView>
   );

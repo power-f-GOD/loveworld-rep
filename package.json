@@ -8,11 +8,13 @@
     "eject": "expo eject"
   },
   "dependencies": {
+    "@alessiocancian/react-native-actionsheet": "^3.0.3",
     "@expo-google-fonts/poppins": "^0.2.0",
     "@react-navigation/material-bottom-tabs": "^6.0.1",
     "@react-navigation/native": "^6.0.1",
     "@react-navigation/native-stack": "^6.0.1",
     "@react-navigation/stack": "^6.0.1",
+    "@types/react-native-actionsheet": "^2.4.3",
     "@types/react-native-vector-icons": "^6.4.8",
     "axios": "^0.21.1",
     "expo": "^42.0.3",

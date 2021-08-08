@@ -1,8 +1,14 @@
-import { REPSnackbarProps, UserData, REPModalProps } from 'src/types';
+import {
+  REPSnackbarProps,
+  UserData,
+  REPModalProps,
+  REPActionSheetProps
+} from 'src/types';
 
 export const APIBaseURL = 'http://lw-rep-jarvis.herokuapp.com';
 export const DISPLAY_SNACK_BAR = 'DISPLAY_SNACK_BAR';
 export const DISPLAY_MODAL = 'DISPLAY_MODAL';
+export const DISPLAY_ACTION_SHEET = 'DISPLAY_ACTION_SHEET';
 export const USER_DATA = 'USER_DATA';
 
 export const userDataState: UserData = {
@@ -26,8 +32,19 @@ export const snackbarState: REPSnackbarProps = {
 };
 
 export const modalState: REPModalProps = {
+  title: '',
   open: false,
-  children: []
+  children: [],
+  fade: false,
+  full: true
+};
+
+export const actionSheetState: REPActionSheetProps = {
+  open: false,
+  options: [],
+  title: '',
+  cancelIndex: -1,
+  destructiveIndex: -1
 };
 
 export const colors = {

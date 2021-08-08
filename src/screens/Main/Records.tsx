@@ -8,12 +8,6 @@ import { mainStyles } from 'src/styles';
 const _Records = () => {
   return (
     <ScrollView style={mainStyles.Tab}>
-      <REPText
-        style={[fonts.h1, { lineHeight: fonts.h1.fontSize + 5 }]}
-        size={fonts.h1.fontSize}
-        bold>
-        Records
-      </REPText>
       <REPText>Coming soon!</REPText>
     </ScrollView>
   );

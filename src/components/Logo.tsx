@@ -2,12 +2,15 @@ import React, { FC } from 'react';
 import { View, Text, StyleSheet, ViewStyle, StyleProp } from 'react-native';
 import { colors, fonts } from 'src/constants';
 import { REPAnimate } from './REPAnimate';
+import { MainStackParamList } from 'src/types';
+import { REPText } from './REPText';
 
 export const Logo: FC<{
   style?: StyleProp<ViewStyle>;
   animate?: boolean;
   loopAnimation?: boolean;
-}> = ({ style, animate, loopAnimation }) => {
+  currentTab?: keyof MainStackParamList;
+}> = ({ style, animate, currentTab, loopAnimation }) => {
   return (
     <View style={[S.Logo, style ? style : {}]}>
       <View style={S.boxGrid}>
@@ -25,15 +28,26 @@ export const Logo: FC<{
         </REPAnimate>
       </View>
 
-      <View>
+      <View
+        style={
+          currentTab && currentTab !== 'Dashboard'
+            ? {
+                transform: [{ scale: 0.85 }]
+              }
+            : undefined
+        }>
         <REPAnimate
           noAnimate={!animate}
           direction='x'
           delay={0}
           magnitude={15}
           duration={500}>
-          <Text style={S.loveworld}>LOVEWORLD</Text>
-          <Text style={S.rep}>REP</Text>
+          <REPText style={S.loveworld} size={12}>
+            {currentTab && currentTab !== 'Dashboard' ? ' ' : 'LOVEWORLD'}
+          </REPText>
+          <REPText style={S.rep} size={40} bold>
+            {currentTab && currentTab !== 'Dashboard' ? currentTab : 'REP'}
+          </REPText>
         </REPAnimate>
       </View>
     </View>
@@ -83,6 +97,7 @@ const S = StyleSheet.create({
   rep: {
     fontSize: 40,
     lineHeight: 45,
+    top: -4,
     left: -2,
     color: 'black',
     fontFamily: fonts.bold,

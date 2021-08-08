@@ -2,7 +2,8 @@ import {
   REPSnackbarProps,
   ActionProps,
   UserData,
-  REPModalProps
+  REPModalProps,
+  REPActionSheetProps
 } from 'src/types';
 import {
   snackbarState,
@@ -10,7 +11,9 @@ import {
   userDataState,
   USER_DATA,
   DISPLAY_MODAL,
-  modalState
+  modalState,
+  actionSheetState,
+  DISPLAY_ACTION_SHEET
 } from 'src/constants';
 
 export const snackbar = (
@@ -27,6 +30,15 @@ export const modal = (
   action: ActionProps<REPModalProps>
 ): REPModalProps => {
   return action.type === DISPLAY_MODAL
+    ? { ...state, full: false, fade: false, ...action.payload }
+    : state;
+};
+
+export const actionSheet = (
+  state: REPActionSheetProps = actionSheetState,
+  action: ActionProps<REPActionSheetProps>
+): REPActionSheetProps => {
+  return action.type === DISPLAY_ACTION_SHEET
     ? { ...state, ...action.payload }
     : state;
 };

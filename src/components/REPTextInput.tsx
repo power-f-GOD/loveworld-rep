@@ -1,4 +1,12 @@
-import React, { useRef, useEffect, useState, FC, memo } from 'react';
+import React, {
+  useRef,
+  useEffect,
+  useState,
+  FC,
+  memo,
+  useMemo,
+  useCallback
+} from 'react';
 import {
   TextInput,
   View,
@@ -9,6 +17,7 @@ import {
 } from 'react-native';
 import { View as MotiView, useAnimationState } from 'moti';
 import { colors, space, fonts, fontFamily } from 'src/constants';
+import { REPText } from './REPText';
 
 const _REPTextInput: FC<
   { [P in keyof TextInput['props']]: TextInput['props'][P] } & {
@@ -50,6 +59,69 @@ const _REPTextInput: FC<
       opacity: 1
     }
   });
+  const viewStyle = useMemo(() => {
+    return {
+      ...S.wrapper,
+      ...((style as any) || {}),
+      backgroundColor: isFocused ? '#eee' : 'transparent',
+      borderBottomWidth: isFocused ? 2 : 1,
+      borderBottomColor: err ? colors.red : colors.black
+    };
+  }, [isFocused]);
+  const labelStyle = useMemo(() => {
+    return {
+      ...S.label,
+      backgroundColor: isFocused ? '#eee' : colors.white
+    };
+  }, [isFocused]);
+  const inputStyle = useMemo(() => {
+    return {
+      ...S.input,
+      backgroundColor: isFocused ? '#eee' : colors.white
+    };
+  }, [isFocused]);
+
+  const handleViewLayout = useCallback(
+    (e) => {
+      if (onLayout) {
+        onLayout(e);
+      }
+
+      setHeight(e.nativeEvent.layout.height);
+    },
+    [onLayout]
+  );
+
+  const handleInputFocus = useCallback(
+    (e) => {
+      if (onFocus) {
+        onFocus(e);
+      }
+
+      setIsFocused(true);
+    },
+    [onFocus]
+  );
+
+  const handleInputBlur = useCallback(
+    (e) => {
+      if (onBlur) {
+        onBlur(e);
+      }
+
+      setIsFocused(false);
+    },
+    [onBlur]
+  );
+
+  const handleInputKeypress = useCallback(
+    (e) => {
+      if (onKeyPress) {
+        onKeyPress(e);
+      }
+    },
+    [onKeyPress]
+  );
 
   useEffect(() => {
     setTimeout(() => {
@@ -64,65 +136,24 @@ const _REPTextInput: FC<
   }, [helperTextAnimState, err]);
 
   return (
-    <View
-      style={[
-        S.wrapper,
-        (style as any) || {},
-        {
-          backgroundColor: isFocused ? '#eee' : 'transparent',
-          borderBottomWidth: isFocused ? 2 : 1,
-          borderBottomColor: err ? colors.red : colors.black
-        }
-      ]}
-      onLayout={(e) => {
-        if (onLayout) {
-          onLayout(e);
-        }
-
-        setHeight(e.nativeEvent.layout.height);
-      }}>
+    <View style={viewStyle} onLayout={handleViewLayout}>
       {label && (
         <MotiView
           pointerEvents='none'
-          style={[S.label, isFocused && { backgroundColor: '#eee' }]}
+          style={labelStyle}
           state={labelAnimState}
-          transition={{ type: 'timing' as any, duration: 300 }}>
-          <Text
-            style={{
-              color: err ? colors.red : colors.black,
-              ...fontFamily
-            }}>
-            {label}
-          </Text>
+          transition={{ type: 'timing' as any, duration: 250 }}>
+          <REPText color={err ? colors.red : colors.grey}>{label}</REPText>
         </MotiView>
       )}
 
       <TextInput
         {...props}
-        style={[
-          S.input,
-          { backgroundColor: isFocused ? '#eee' : colors.white }
-        ]}
+        style={inputStyle}
         value={value}
-        onFocus={(e) => {
-          if (onFocus) {
-            onFocus(e);
-          }
-
-          setIsFocused(true);
-        }}
-        onBlur={(e) => {
-          if (onBlur) {
-            onBlur(e);
-          }
-
-          setIsFocused(false);
-        }}
-        onKeyPress={(e) => {
-          if (onKeyPress) {
-            onKeyPress(e);
-          }
-        }}
+        onFocus={handleInputFocus}
+        onBlur={handleInputBlur}
+        onKeyPress={handleInputKeypress}
       />
 
       {helperText && (
@@ -162,6 +193,7 @@ const S = StyleSheet.create({
     left: space.sm - 10,
     justifyContent: 'center',
     backgroundColor: colors.white,
+    color: colors.grey,
     paddingLeft: 8,
     paddingRight: 8,
     borderRadius: space.sm,

@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native';
-import { colors } from 'src/constants';
+import { colors, space } from 'src/constants';
 
 export const authStyles = StyleSheet.create({
   Auth: {
@@ -17,6 +17,12 @@ export const authStyles = StyleSheet.create({
     lineHeight: 36,
     marginTop: 50
   },
+  input: {
+    marginTop: 35
+  },
+  inputFirstOfType: {
+    marginTop: 50
+  },
   forgotPassword: {
     textTransform: 'capitalize',
     top: 10,
@@ -27,8 +33,17 @@ export const authStyles = StyleSheet.create({
     alignContent: 'flex-end',
     justifyContent: 'flex-end'
   },
+  churchWrapper: {
+    marginTop: 20
+  },
+  church: {
+    backgroundColor: 'transparent',
+    borderBottomColor: colors.black,
+    borderBottomWidth: 1,
+    padding: 0
+  },
   actionButton: {
-    marginTop: 116
+    marginTop: 60
   },
   actionButtonRider: {
     flexDirection: 'row',
@@ -36,5 +51,8 @@ export const authStyles = StyleSheet.create({
     marginTop: 25,
     marginBottom: '15%',
     justifyContent: 'center'
+  },
+  actionButtonRiderLink: {
+    marginStart: space.xxs
   }
 });

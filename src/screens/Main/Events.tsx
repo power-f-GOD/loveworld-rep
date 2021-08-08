@@ -1,5 +1,12 @@
 import React, { FC, useCallback } from 'react';
-import { View, ScrollView, StyleSheet, Image } from 'react-native';
+import {
+  View,
+  ScrollView,
+  StyleSheet,
+  Image,
+  FlatList,
+  ListRenderItemInfo
+} from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import { dispatch, displayModal } from 'src/state';
@@ -12,6 +19,8 @@ import { Button, Surface } from 'react-native-paper';
 
 const _Events: FC<{ events: FetchState<APIEventsResponse> }> = ({ events }) => {
   const { data: eventsData, status: eventsStatus } = events;
+
+  const listKeyExtractor = useCallback((item) => item._id, []);
 
   const handleEventDetailsPress = useCallback(
     (event: APIEventsResponse[0], imageSrc: any) => () => {
@@ -46,14 +55,63 @@ const _Events: FC<{ events: FetchState<APIEventsResponse> }> = ({ events }) => {
     []
   );
 
+  const handleRenderEvents = useCallback(
+    ({ index: i, item: event }: ListRenderItemInfo<APIEventsResponse[0]>) => {
+      const imageSrc = event.banner
+        ? { uri: event.banner }
+        : require('src/assets/green-leaf.png');
+
+      return (
+        <REPAnimate
+          key={i}
+          magnitude={space.sm}
+          delay={200 * i}
+          style={{
+            marginTop: space.xs + 2
+          }}>
+          <View style={[S.eventCard, {}]}>
+            <View
+              style={[
+                {
+                  width: space.xl,
+                  borderRadius: space.xs,
+                  borderColor: '#eee'
+                }
+              ]}>
+              <Image
+                style={[
+                  S.banner,
+                  {
+                    borderRadius: space.xs,
+                    width: '100%',
+                    alignSelf: 'stretch'
+                  }
+                ]}
+                source={imageSrc}
+              />
+            </View>
+
+            <View style={{ marginLeft: space.xs + 2, flex: 1 }}>
+              <EventMainInfo event={event} renderPartial />
+
+              <Button
+                mode='outlined'
+                color={colors.green}
+                style={{ flex: 1, width: '100%', marginTop: 10 }}
+                contentStyle={{ width: '100%' }}
+                onPress={handleEventDetailsPress(event, imageSrc)}>
+                Details
+              </Button>
+            </View>
+          </View>
+        </REPAnimate>
+      );
+    },
+    [handleEventDetailsPress]
+  );
+
   return (
-    <ScrollView style={mainStyles.Tab}>
-      <REPText
-        style={[fonts.h1, { lineHeight: fonts.h1.fontSize + 5 }]}
-        size={fonts.h1.fontSize}
-        bold>
-        Events
-      </REPText>
+    <>
       {!eventsData?.length && (
         <REPText>
           {eventsStatus === 'pending'
@@ -61,68 +119,22 @@ const _Events: FC<{ events: FetchState<APIEventsResponse> }> = ({ events }) => {
             : 'No events at the moment.'}
         </REPText>
       )}
-      {eventsData?.map((event, i) => {
-        const imageSrc = event.banner
-          ? { uri: event.banner }
-          : require('src/assets/green-leaf.png');
-
-        return (
-          <REPAnimate
-            key={i}
-            magnitude={space.sm}
-            delay={200 * i}
-            style={{
-              marginTop: space.xs + 2
-            }}>
-            <View style={[S.eventCard, {}]}>
-              <View
-                style={[
-                  {
-                    width: space.xl,
-                    borderRadius: space.xs,
-                    borderColor: '#eee'
-                  }
-                ]}>
-                <Image
-                  style={[
-                    S.banner,
-                    {
-                      borderRadius: space.xs,
-                      width: '100%',
-                      alignSelf: 'stretch'
-                    }
-                  ]}
-                  source={imageSrc}
-                />
-              </View>
-
-              <View style={{ marginLeft: space.xs + 2, flex: 1 }}>
-                <EventMainInfo event={event} renderTitle />
-
-                <Button
-                  mode='outlined'
-                  color={colors.green}
-                  style={{ flex: 1, width: '100%', marginTop: 10 }}
-                  contentStyle={{ width: '100%' }}
-                  onPress={handleEventDetailsPress(event, imageSrc)}>
-                  Details
-                </Button>
-              </View>
-            </View>
-          </REPAnimate>
-        );
-      })}
-    </ScrollView>
+      <FlatList
+        data={eventsData}
+        renderItem={handleRenderEvents}
+        keyExtractor={listKeyExtractor}
+      />
+    </>
   );
 };
 
 const EventMainInfo: FC<{
   event: APIEventsResponse[0];
-  renderTitle?: boolean;
-}> = ({ event, renderTitle }) => {
+  renderPartial?: boolean;
+}> = ({ event, renderPartial }) => {
   return (
     <>
-      {renderTitle && (
+      {renderPartial && (
         <View style={{ flexDirection: 'row' }}>
           <REPText
             size={fonts.h4.fontSize}
@@ -140,25 +152,27 @@ const EventMainInfo: FC<{
         </REPText>
       </View>
 
-      <View
-        style={{
-          flexDirection: 'row',
-          flex: 1,
-          flexWrap: 'wrap'
-        }}>
-        <View style={{ flexDirection: 'row', marginRight: space.sm }}>
-          <MaterialIcons name='calendar' color={colors.grey} style={S.icon} />
-          <REPText size={space.xs + 4} color={colors.grey}>
-            {new Date(event.date).toDateString()}
-          </REPText>
+      {!renderPartial && (
+        <View
+          style={{
+            flexDirection: 'row',
+            flex: 1,
+            flexWrap: 'wrap'
+          }}>
+          <View style={{ flexDirection: 'row', marginRight: space.sm }}>
+            <MaterialIcons name='calendar' color={colors.grey} style={S.icon} />
+            <REPText size={space.xs + 4} color={colors.grey}>
+              {new Date(event.date).toDateString()}
+            </REPText>
+          </View>
+          <View style={{ flexDirection: 'row' }}>
+            <MaterialIcons name='timer' color={colors.grey} style={S.icon} />
+            <REPText size={space.xs + 4} color={colors.grey}>
+              {new Date(event.date).getHours()}:00
+            </REPText>
+          </View>
         </View>
-        <View style={{ flexDirection: 'row' }}>
-          <MaterialIcons name='timer' color={colors.grey} style={S.icon} />
-          <REPText size={space.xs + 4} color={colors.grey}>
-            {new Date(event.date).getHours()}:00
-          </REPText>
-        </View>
-      </View>
+      )}
 
       <View style={{ flexDirection: 'row' }}>
         <MaterialIcons name='timer-sand' color={colors.grey} style={S.icon} />
@@ -180,7 +194,6 @@ export const Events = connect(
 const S = StyleSheet.create({
   eventCard: {
     padding: space.xs,
-    borderRadius: space.xs,
     flexDirection: 'row',
     borderWidth: 1,
     borderColor: '#eee',

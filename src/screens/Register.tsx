@@ -1,16 +1,14 @@
-import React, { useEffect, useState, FC } from 'react';
+import React, { useEffect, useState, FC, useCallback } from 'react';
 import { View, ScrollView, TouchableNativeFeedback } from 'react-native';
 import { TextInput, List } from 'react-native-paper';
 
 import {
   Logo,
-  REPAnimate,
   REPTextInput,
   REPButton,
   REPText,
   REPLink
 } from 'src/components';
-import { colors, space } from 'src/constants';
 import {
   REPStackScreenProps,
   FetchState,
@@ -38,38 +36,86 @@ const _Register: FC<
   const [org, setOrg] = useState({ name: '', id: '' });
   const { data: orgsData, status: orgsStatus } = _orgs;
 
-  useEffect(() => {
-    if (orgsStatus === 'fulfilled') {
-      dispatch(
-        displayModal({
-          children: orgsData?.map((org) => {
-            const zone = org.org_directory.find((org) => org.office === 'zone');
+  const handleChurchInputPress = useCallback(() => {
+    dispatch(
+      displayModal({
+        open: true,
+        title: 'Find your Church'
+      })
+    );
+  }, []);
 
-            return (
-              <TouchableNativeFeedback
-                onPress={() => {
-                  dispatch(displayModal({ open: false }));
-                  setOrg({ name: org.name, id: org._id });
-                }}
-                key={org._id}>
-                <View>
-                  <List.Item
-                    title={org.name}
-                    description={`Zone: ${zone?.name || '...'}`}
-                    left={(props) => (
-                      <List.Icon
-                        {...props}
-                        style={{ margin: 0 }}
-                        icon='map-marker'
-                      />
-                    )}></List.Item>
-                </View>
-              </TouchableNativeFeedback>
-            );
-          })
+  const handleRegisterPress = useCallback(() => {
+    if (full_name && email && password && org.id) {
+      return dispatch(
+        triggerRegister({
+          full_name: full_name
+            .split(' ')
+            .map((name) => name[0].toUpperCase() + name.slice(1))
+            .join(' '),
+          email,
+          password,
+          organization: org.id
         })
       );
     }
+
+    dispatch(
+      displaySnackbar({
+        open: true,
+        message: 'All fields are required.'
+      })
+    );
+  }, [full_name, email, password, org.id]);
+
+  const handleLoginHerePress = useCallback(() => {
+    navigation.navigate('Login' as any);
+  }, []);
+
+  const handleFullNameChange = useCallback((text: string) => {
+    setFullname(text);
+  }, []);
+
+  const handleEmailChange = useCallback((text: string) => {
+    setEmail(text);
+  }, []);
+
+  const handlePasswordChange = useCallback((text: string) => {
+    setPassword(text);
+  }, []);
+
+  useEffect(() => {
+    if (orgsStatus !== 'fulfilled') return void 0;
+
+    dispatch(
+      displayModal({
+        children: orgsData?.map((org) => {
+          const zone = org.org_directory.find((org) => org.office === 'zone');
+
+          return (
+            <TouchableNativeFeedback
+              onPress={() => {
+                dispatch(displayModal({ open: false }));
+                setOrg({ name: org.name, id: org._id });
+              }}
+              key={org._id}>
+              <View>
+                <List.Item
+                  title={org.name}
+                  description={`Zone: ${zone?.name || '...'}`}
+                  left={(props) => (
+                    <List.Icon
+                      {...props}
+                      style={{ margin: 0 }}
+                      icon='map-marker'
+                    />
+                  )}></List.Item>
+              </View>
+            </TouchableNativeFeedback>
+          );
+        })
+      })
+    );
   }, [orgsStatus, orgsData]);
 
   return (
@@ -77,94 +123,62 @@ const _Register: FC<
       <Logo />
 
       <ScrollView showsVerticalScrollIndicator={false}>
-        <REPAnimate noAnimate>
-          <REPText style={authStyles.h1} size={24} bold>
-            Register
-          </REPText>
-          <REPText>Welcome! Join your Church now.</REPText>
+        <REPText style={authStyles.h1} size={24} bold>
+          Register
+        </REPText>
+        <REPText>Welcome! Join your Church now.</REPText>
 
-          <REPTextInput
-            label='Full name'
-            value={full_name}
-            style={{ marginTop: 50 }}
-            onChangeText={(text) => setFullname(text)}
-          />
+        <REPTextInput
+          label='Full name'
+          value={full_name}
+          style={authStyles.inputFirstOfType}
+          onChangeText={handleFullNameChange}
+        />
 
-          <REPTextInput
-            label='Email'
-            value={email}
-            style={{ marginTop: 35 }}
-            onChangeText={(text) => setEmail(text)}
-          />
+        <REPTextInput
+          label='Email'
+          value={email}
+          style={authStyles.input}
+          onChangeText={handleEmailChange}
+        />
 
-          <REPTextInput
-            label='Password'
-            value={password}
-            secureTextEntry={true}
-            style={{ marginTop: 35 }}
-            onChangeText={(text) => setPassword(text)}
-          />
+        <REPTextInput
+          label='Password'
+          value={password}
+          secureTextEntry={true}
+          style={authStyles.input}
+          onChangeText={handlePasswordChange}
+        />
 
-          <View style={{ marginTop: 20 }}>
-            <TouchableNativeFeedback
-              onPress={() => {
-                dispatch(
-                  displayModal({
-                    open: true,
-                    title: 'Find Church'
-                  })
-                );
-              }}>
-              <View>
-                <TextInput
-                  label='Church'
-                  value={org.name}
-                  pointerEvents='none'
-                  disabled={true}
-                  style={{
-                    backgroundColor: 'transparent',
-                    borderBottomColor: colors.black,
-                    borderBottomWidth: 1
-                  }}
-                />
-              </View>
-            </TouchableNativeFeedback>
-          </View>
+        <View style={authStyles.churchWrapper}>
+          <TouchableNativeFeedback onPress={handleChurchInputPress}>
+            <View>
+              <TextInput
+                label='Church'
+                value={org.name}
+                pointerEvents='none'
+                disabled={true}
+                style={authStyles.church}
+              />
+            </View>
+          </TouchableNativeFeedback>
+        </View>
 
-          <REPButton
-            style={{ marginTop: 50 }}
-            onPress={() => {
-              if (full_name && email && password && org.id) {
-                return dispatch(
-                  triggerRegister({
-                    full_name,
-                    email,
-                    password,
-                    organization: org.id
-                  })
-                );
-              }
+        <REPButton
+          style={authStyles.actionButton}
+          onPress={handleRegisterPress}>
+          REGISTER
+        </REPButton>
 
-              dispatch(
-                displaySnackbar({
-                  open: true,
-                  message: 'All fields are required.'
-                })
-              );
-            }}>
-            REGISTER
-          </REPButton>
-
-          <View style={authStyles.actionButtonRider}>
-            <REPText>Already a member?</REPText>
-            <REPLink
-              bold
-              style={{ marginStart: space.xxs }}
-              onPress={() => navigation.navigate('Login' as any)}>
-              Login here.
-            </REPLink>
-          </View>
-        </REPAnimate>
+        <View style={authStyles.actionButtonRider}>
+          <REPText>Already a member?</REPText>
+          <REPLink
+            bold
+            style={authStyles.actionButtonRiderLink}
+            onPress={handleLoginHerePress}>
+            Login here.
+          </REPLink>
+        </View>
       </ScrollView>
     </View>
   );

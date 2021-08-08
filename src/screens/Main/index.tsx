@@ -1,18 +1,24 @@
-import React, { FC, useState, useEffect } from 'react';
-import { Appbar, FAB, Menu } from 'react-native-paper';
+import React, { FC, useState, useEffect, useRef, useCallback } from 'react';
+import { Appbar, FAB, Menu, Button } from 'react-native-paper';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 import MaterialIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import { connect } from 'react-redux';
+import { useAnimationState, MotiView } from 'moti';
+import { TouchableNativeFeedback, View, StyleSheet } from 'react-native';
 
 import { Dashboard } from './Dashboard';
 import { MainStackParamList, REPStackScreenProps, UserData } from 'src/types';
 import { Records } from './Records';
 import { Events } from './Events';
 import { Projects } from './Projects';
-import { Logo, REPText, REPAnimate } from 'src/components';
+import { Logo, REPText, REPAnimate, REPFAB } from 'src/components';
 import { colors, space } from 'src/constants';
-import { connect } from 'react-redux';
-import { useAnimationState, MotiView } from 'moti';
-import { dispatch, displayModal, triggerSignout } from 'src/state';
+import {
+  dispatch,
+  displayModal,
+  triggerSignout,
+  displayActionSheet
+} from 'src/state';
 
 const Tab = createMaterialBottomTabNavigator();
 
@@ -36,6 +42,65 @@ const _Main: FC<REPStackScreenProps<'Main'> & { userData: UserData }> = ({
       scale: 1
     }
   });
+
+  const handleActionPress = useCallback(
+    (action: string) => {
+      dispatch(displayActionSheet({ open: false }));
+      dispatch(
+        displayModal({
+          open: true,
+          title:
+            action?.replace('a new ', '') ||
+            (`${
+              currentTab === 'Records' ? 'Add' : 'Create'
+            } ${currentTab.replace(/s$/, '')}` as any),
+          children: [
+            <REPAnimate magnitude={0} key={0}>
+              <REPText>COMING SOON!</REPText>
+            </REPAnimate>
+          ]
+        })
+      );
+    },
+    [currentTab]
+  );
+
+  const handleSetTargetPress = useCallback(() => {
+    handleActionPress('Create a new Target');
+  }, [handleActionPress]);
+
+  const handleAddRecordPress = useCallback(() => {
+    handleActionPress('Add a new Record');
+  }, [handleActionPress]);
+
+  const handleFABPress = useCallback(() => {
+    dispatch(
+      displayActionSheet({
+        open: true,
+        options: [
+          <Button
+            mode='text'
+            onPress={handleSetTargetPress}
+            style={{ width: '100%' }}
+            contentStyle={{ height: '100%' }}>
+            <REPText color={colors.black} bold>
+              Set a new Target
+            </REPText>
+          </Button>,
+          <Button
+            mode='text'
+            onPress={handleAddRecordPress}
+            style={{ width: '100%' }}
+            contentStyle={{ height: '100%' }}>
+            <REPText color={colors.black} bold>
+              Add a new Record
+            </REPText>
+          </Button>
+        ],
+        title: 'What would you like to do?'
+      })
+    );
+  }, []);
 
   useEffect(() => {
     FABAnimState.transitionTo(
@@ -69,6 +134,7 @@ const _Main: FC<REPStackScreenProps<'Main'> & { userData: UserData }> = ({
                 transform: [{ scale: 0.6 }, { translateX: -10 }],
                 marginLeft: 0
               }}
+              currentTab={currentTab}
             />
           }
           style={{ paddingStart: 0 }}
@@ -149,41 +215,24 @@ const _Main: FC<REPStackScreenProps<'Main'> & { userData: UserData }> = ({
         />
       </Tab.Navigator>
 
-      <MotiView
-        state={FABAnimState}
-        pointerEvents={currentTabIsDash ? 'none' : undefined}
-        style={{
-          position: 'absolute',
-          margin: 16,
-          right: 0,
-          bottom: 50
-        }}
-        transition={{ type: 'timing', duration: 300 }}>
-        <FAB
-          style={{
-            backgroundColor: barColor
-          }}
-          icon='plus'
-          onPress={() =>
-            dispatch(
-              displayModal({
-                open: true,
-                title: `${
-                  currentTab === 'Records' ? 'Add' : 'Create'
-                } ${currentTab.replace(/s$/, '')}` as any,
-                children: [
-                  <REPAnimate magnitude={0} key={0}>
-                    <REPText>COMING SOON!</REPText>
-                  </REPAnimate>
-                ]
-              })
-            )
-          }
-        />
-      </MotiView>
+      <REPFAB
+        currentTab={currentTab}
+        currentTabIsDash={currentTabIsDash}
+        barColor={barColor}
+        is_admin={!!is_admin}
+      />
     </>
   );
 };
+
+const S = StyleSheet.create({
+  FABWrapper: {
+    position: 'absolute',
+    margin: 16,
+    right: 0,
+    bottom: 50
+  }
+});
 
 export const Main = connect((state: { userData: UserData }) => ({
   userData: state.userData

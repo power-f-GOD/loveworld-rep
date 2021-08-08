@@ -19,10 +19,9 @@ import {
 import { colors, space, fonts } from 'src/constants';
 import { REPAnimate, REPModal } from './components';
 import { REPSnackbar } from './components/REPSnackbar';
+import { REPActionSheet } from './components/REPActionSheet';
 
 const Stack = createNativeStackNavigator();
-
-let searchTimeout: NodeJS.Timeout;
 
 const _App: FC<{
   auth: AuthProps;
@@ -39,7 +38,7 @@ const _App: FC<{
       <NavigationContainer>
         <Stack.Navigator
           initialRouteName={
-            snackbarMessage?.includes('Regist') ? 'Register' : undefined
+            snackbarMessage?.includes('Register') ? 'Register' : undefined
           }>
           {(() => {
             if (authStatus === 'pending' && !authErr) {
@@ -92,6 +91,7 @@ const _App: FC<{
 
       <REPSnackbar />
       <REPModal />
+      <REPActionSheet />
     </>
   );
 };

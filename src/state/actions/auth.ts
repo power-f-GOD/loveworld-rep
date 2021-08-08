@@ -104,7 +104,7 @@ export const triggerRegister = (payload: RegisterProps) => (
 
       if (!data) {
         return dispatch(
-          displaySnackbar({ message: `Registration: ${message}`, open: true })
+          displaySnackbar({ message: `Register: ${message}`, open: true })
         );
       }
 
