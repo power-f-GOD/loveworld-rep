@@ -48,11 +48,11 @@ export const actionSheetState: REPActionSheetProps = {
 };
 
 export const colors = {
-  red: '#d22',
+  red: '#c22',
   green: '#2a2',
   purple: 'purple',
   white: 'white',
-  black: '#111',
+  black: '#222',
   grey: 'grey',
   warning: 'gold',
   success: 'green',

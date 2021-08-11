@@ -1,4 +1,12 @@
 import { APIOrgQueryResponse } from './auth';
+import { ImageSourcePropType } from 'react-native';
+
+export interface EventDetailsHandler {
+  handleEventDetailsPress?(
+    event: APIEventsResponse[0],
+    imageSrc: ImageSourcePropType
+  ): () => void;
+}
 
 export type APIEventsResponse = Array<{
   _id: string;

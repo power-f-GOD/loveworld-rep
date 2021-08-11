@@ -14,7 +14,11 @@ const _REPSnackbar: FC<{
   return (
     <Snackbar
       visible={!!snackbar.open}
-      style={{ backgroundColor: colors[snackbar.severity || 'info'] }}
+      style={{
+        backgroundColor: colors[snackbar.severity || 'info']
+        // borderRadius: 0,
+        // margin: 0
+      }}
       onDismiss={() => dispatch(displaySnackbar({ open: false }))}
       action={{
         label: snackbar.label || 'OK',

@@ -9,7 +9,6 @@ import { TouchableNativeFeedback, View, StyleSheet } from 'react-native';
 import { Dashboard } from './Dashboard';
 import { MainStackParamList, REPStackScreenProps, UserData } from 'src/types';
 import { Records } from './Records';
-import { Events } from './Events';
 import { Projects } from './Projects';
 import { Logo, REPText, REPAnimate, REPFAB } from 'src/components';
 import { colors, space } from 'src/constants';
@@ -19,6 +18,7 @@ import {
   triggerSignout,
   displayActionSheet
 } from 'src/state';
+import { Events } from './Events';
 
 const Tab = createMaterialBottomTabNavigator();
 
@@ -121,7 +121,7 @@ const _Main: FC<REPStackScreenProps<'Main'> & { userData: UserData }> = ({
       barColor = colors.purple;
       break;
     default:
-      barColor = colors.black;
+      barColor = colors.white;
   }
 
   return (
@@ -168,6 +168,7 @@ const _Main: FC<REPStackScreenProps<'Main'> & { userData: UserData }> = ({
 
       <Tab.Navigator
         barStyle={{ backgroundColor: barColor }}
+        // initialRouteName='Events'
         screenListeners={{
           focus: (e: any) => {
             setTimeout(() => setCurrentTab(e.target.split('-')[0] || 0), 0);

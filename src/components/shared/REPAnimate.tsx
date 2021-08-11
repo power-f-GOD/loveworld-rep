@@ -26,6 +26,8 @@ export const REPAnimate: FC<{
   children
 }) => {
   return Children.map(children, (child: any, i) => {
+    if (!child?.props) return child;
+
     const { animationDelay, animationDuration } = child.props.style || {};
     const isX = direction === 'x';
     const isScale = type === 'scale';

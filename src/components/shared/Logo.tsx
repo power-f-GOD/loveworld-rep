@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 import { View, Text, StyleSheet, ViewStyle, StyleProp } from 'react-native';
-import { colors, fonts } from 'src/constants';
+import { colors, fonts, space } from 'src/constants';
 import { REPAnimate } from './REPAnimate';
 import { MainStackParamList } from 'src/types';
 import { REPText } from './REPText';
@@ -32,7 +32,11 @@ export const Logo: FC<{
         style={
           currentTab && currentTab !== 'Dashboard'
             ? {
-                transform: [{ scale: 0.85 }]
+                transform: [
+                  { scale: 0.75 },
+                  { translateX: -space.sm - 2 },
+                  { translateY: space.xs - 2 }
+                ]
               }
             : undefined
         }>

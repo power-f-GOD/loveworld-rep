@@ -27,7 +27,7 @@ const _Dashboard: FC<{ userData: UserData; numEvents: number }> = ({
         bold>
         Hi, {userData.full_name?.split(' ')[0] || '...'}!
       </REPText>
-      <REPText>Welcome back!</REPText>
+      <REPText>Welcome!</REPText>
       <ScrollView
         contentContainerStyle={S.boxGrid}
         horizontal={true}

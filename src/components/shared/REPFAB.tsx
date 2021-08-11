@@ -10,6 +10,7 @@ import { REPText } from './REPText';
 import { REPAnimate } from './REPAnimate';
 import { colors } from 'src/constants';
 import { dispatch, displayModal, displayActionSheet } from 'src/state';
+import { actionSheetOptionsStyles } from 'src/styles';
 
 const _REPFAB: FC<{
   barColor: string;
@@ -74,8 +75,8 @@ const _REPFAB: FC<{
           <Button
             mode='text'
             onPress={handleSetTargetPress}
-            style={{ width: '100%' }}
-            contentStyle={{ height: '100%' }}>
+            style={actionSheetOptionsStyles.button}
+            contentStyle={actionSheetOptionsStyles.buttonContent}>
             <REPText color={colors.black} bold>
               Set a new Target
             </REPText>
@@ -83,8 +84,8 @@ const _REPFAB: FC<{
           <Button
             mode='text'
             onPress={handleAddRecordPress}
-            style={{ width: '100%' }}
-            contentStyle={{ height: '100%' }}>
+            style={actionSheetOptionsStyles.button}
+            contentStyle={actionSheetOptionsStyles.buttonContent}>
             <REPText color={colors.black} bold>
               Add a new Record
             </REPText>

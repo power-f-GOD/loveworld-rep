@@ -20,7 +20,7 @@ export const _Login: FC<
 > = ({ navigation, userData }) => {
   const [email, setEmail] = useState('' || userData.email);
   const [password, setPassword] = useState('' || userData.password);
-  // console.log('LOGIN Renders')
+
   return (
     <View style={authStyles.Auth}>
       <Logo />

@@ -17,9 +17,12 @@ import {
   verifyAuth
 } from 'src/state/actions';
 import { colors, space, fonts } from 'src/constants';
-import { REPAnimate, REPModal } from './components';
-import { REPSnackbar } from './components/REPSnackbar';
-import { REPActionSheet } from './components/REPActionSheet';
+import {
+  REPAnimate,
+  REPModal,
+  REPSnackbar,
+  REPActionSheet
+} from './components';
 
 const Stack = createNativeStackNavigator();
 
