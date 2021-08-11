@@ -10,14 +10,14 @@ import { MainInfo } from './MainInfo';
 import { Actions } from './Actions';
 
 const _Card: FC<
-  { index: number; event: APIEventsResponse[0] } & EventDetailsHandler
-> = ({ index: i, event, handleEventDetailsPress }) => {
+  { index: number; event: APIEventsResponse[0] } & EventDetailsHandler & any
+> = ({ index: i, event, handleEventDetailsPress, navigation }) => {
   const imageSrc: ImageSourcePropType = event.banner
     ? { uri: event.banner }
     : require('src/assets/green-leaves.png');
 
   const handleDisplayDetails = useCallback(
-    handleEventDetailsPress!(event, imageSrc),
+    () => navigation.navigate('EventDetails', { event, imageSrc }), // handleEventDetailsPress!(event, imageSrc),
     []
   );
 

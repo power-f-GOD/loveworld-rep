@@ -43,7 +43,7 @@ export const _MainInfo: FC<{
         <View
           style={{
             flexDirection: 'row',
-            flex: 1,
+            // flex: 1,
             flexWrap: 'wrap'
           }}>
           <View style={{ flexDirection: 'row', marginRight: space.sm }}>

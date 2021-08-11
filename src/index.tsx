@@ -1,30 +1,21 @@
 import 'react-native-gesture-handler';
-import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import React, { FC, useEffect, useState, useCallback } from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { createSharedElementStackNavigator } from 'react-navigation-shared-element';
+import React, { FC, useEffect } from 'react';
 // import { StyleSheet, Platform, StatusBar, View } from 'react-native';
 import { connect } from 'react-redux';
-import { Snackbar, Portal, Modal, Text, Searchbar } from 'react-native-paper';
+import { enableScreens } from 'react-native-screens';
 
-import { AuthProps, REPSnackbarProps, REPModalProps } from 'src/types';
+import { AuthProps, REPSnackbarProps } from 'src/types';
 import { Login, Splash, Register, Main } from 'src/screens';
 import { dispatch } from 'src/state/store';
-import {
-  auth,
-  displaySnackbar,
-  displayModal,
-  fetchOrganizations,
-  verifyAuth
-} from 'src/state/actions';
-import { colors, space, fonts } from 'src/constants';
-import {
-  REPAnimate,
-  REPModal,
-  REPSnackbar,
-  REPActionSheet
-} from './components';
+import { verifyAuth } from 'src/state/actions';
+import { REPModal, REPSnackbar, REPActionSheet } from './components';
+import { EventDetails } from './components/screens/Events/EventDetails';
 
-const Stack = createNativeStackNavigator();
+enableScreens();
+
+const Stack = createSharedElementStackNavigator();
 
 const _App: FC<{
   auth: AuthProps;
@@ -61,16 +52,16 @@ const _App: FC<{
                     name='Login'
                     component={Login}
                     options={{
-                      headerShown: false,
-                      animation: 'slide_from_left'
+                      headerShown: false
+                      // animation: 'slide_from_left'
                     }}
                   />
                   <Stack.Screen
                     name='Register'
                     component={Register}
                     options={{
-                      headerShown: false,
-                      animation: 'slide_from_left'
+                      headerShown: false
+                      // animation: 'slide_from_left'
                     }}
                   />
                 </>
@@ -83,6 +74,14 @@ const _App: FC<{
                     component={Main}
                     options={{
                       headerShown: false
+                    }}
+                  />
+                  <Stack.Screen
+                    name='EventDetails'
+                    component={EventDetails}
+                    options={{
+                      title: 'Event Details'
+                      // headerShown: false
                     }}
                   />
                 </>

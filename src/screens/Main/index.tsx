@@ -1,4 +1,11 @@
-import React, { FC, useState, useEffect, useRef, useCallback } from 'react';
+import React, {
+  FC,
+  useState,
+  useEffect,
+  useRef,
+  useCallback,
+  useMemo
+} from 'react';
 import { Appbar, FAB, Menu, Button } from 'react-native-paper';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 import MaterialIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -23,7 +30,8 @@ import { Events } from './Events';
 const Tab = createMaterialBottomTabNavigator();
 
 const _Main: FC<REPStackScreenProps<'Main'> & { userData: UserData }> = ({
-  userData
+  userData,
+  navigation
 }) => {
   const [currentTab, setCurrentTab] = useState<keyof MainStackParamList>(
     'Dashboard'
@@ -42,65 +50,37 @@ const _Main: FC<REPStackScreenProps<'Main'> & { userData: UserData }> = ({
       scale: 1
     }
   });
-
-  const handleActionPress = useCallback(
-    (action: string) => {
-      dispatch(displayActionSheet({ open: false }));
-      dispatch(
-        displayModal({
-          open: true,
-          title:
-            action?.replace('a new ', '') ||
-            (`${
-              currentTab === 'Records' ? 'Add' : 'Create'
-            } ${currentTab.replace(/s$/, '')}` as any),
-          children: [
-            <REPAnimate magnitude={0} key={0}>
-              <REPText>COMING SOON!</REPText>
-            </REPAnimate>
-          ]
-        })
-      );
-    },
-    [currentTab]
-  );
-
-  const handleSetTargetPress = useCallback(() => {
-    handleActionPress('Create a new Target');
-  }, [handleActionPress]);
-
-  const handleAddRecordPress = useCallback(() => {
-    handleActionPress('Add a new Record');
-  }, [handleActionPress]);
-
-  const handleFABPress = useCallback(() => {
-    dispatch(
-      displayActionSheet({
-        open: true,
-        options: [
-          <Button
-            mode='text'
-            onPress={handleSetTargetPress}
-            style={{ width: '100%' }}
-            contentStyle={{ height: '100%' }}>
-            <REPText color={colors.black} bold>
-              Set a new Target
-            </REPText>
-          </Button>,
-          <Button
-            mode='text'
-            onPress={handleAddRecordPress}
-            style={{ width: '100%' }}
-            contentStyle={{ height: '100%' }}>
-            <REPText color={colors.black} bold>
-              Add a new Record
-            </REPText>
-          </Button>
-        ],
-        title: 'What would you like to do?'
-      })
-    );
+  const screenListeners = useMemo(() => {
+    return {
+      focus: (e: any) => {
+        setTimeout(() => setCurrentTab(e.target.split('-')[0] || 0), 0);
+      }
+    };
   }, []);
+  const screenOptions = useCallback(
+    (tabBarLabel: keyof MainStackParamList, iconName: string) => {
+      return {
+        tabBarLabel,
+        tabBarIcon: ({ color }: any) => (
+          <MaterialIcons name={iconName} color={color} size={26} />
+        )
+      };
+    },
+    []
+  );
+  const dashboardOptions = useMemo(
+    () => screenOptions('Dashboard', 'view-dashboard'),
+    []
+  );
+  const recordsOptions = useMemo(
+    () => screenOptions('Records', 'database'),
+    []
+  );
+  const eventsOptions = useMemo(
+    () => screenOptions('Events', 'calendar-month'),
+    []
+  );
+  const projectsOptions = useMemo(() => screenOptions('Projects', 'cash'), []);
 
   useEffect(() => {
     FABAnimState.transitionTo(
@@ -169,50 +149,22 @@ const _Main: FC<REPStackScreenProps<'Main'> & { userData: UserData }> = ({
       <Tab.Navigator
         barStyle={{ backgroundColor: barColor }}
         // initialRouteName='Events'
-        screenListeners={{
-          focus: (e: any) => {
-            setTimeout(() => setCurrentTab(e.target.split('-')[0] || 0), 0);
-          }
-        }}>
+        screenListeners={screenListeners}>
         <Tab.Screen
           name='Dashboard'
           component={Dashboard}
-          options={{
-            tabBarLabel: 'Dashboard',
-            tabBarIcon: ({ color }) => (
-              <MaterialIcons name='view-dashboard' color={color} size={26} />
-            )
-          }}
+          options={dashboardOptions}
         />
         <Tab.Screen
           name='Records'
           component={Records}
-          options={{
-            tabBarLabel: 'Records',
-            tabBarIcon: ({ color }) => (
-              <MaterialIcons name='database' color={color} size={26} />
-            )
-          }}
+          options={recordsOptions}
         />
-        <Tab.Screen
-          name='Events'
-          component={Events}
-          options={{
-            tabBarLabel: 'Events',
-            tabBarIcon: ({ color }) => (
-              <MaterialIcons name='calendar-month' color={color} size={26} />
-            )
-          }}
-        />
+        <Tab.Screen name='Events' component={Events} options={eventsOptions} />
         <Tab.Screen
           name='Projects'
           component={Projects}
-          options={{
-            tabBarLabel: 'Projects',
-            tabBarIcon: ({ color }) => (
-              <MaterialIcons name='cash' color={color} size={26} />
-            )
-          }}
+          options={projectsOptions}
         />
       </Tab.Navigator>
 

@@ -11,10 +11,12 @@ import { dispatch, displayModal } from 'src/state';
 import { eventsStyles } from 'src/styles';
 import { REPText, REPAnimate } from 'src/components';
 import { space, colors } from 'src/constants';
-import { FetchState, APIEventsResponse } from 'src/types';
+import { FetchState, APIEventsResponse, REPStackScreenProps } from 'src/types';
 import { MainInfo, Card } from 'src/components/screens/Events';
 
-const _Events: FC<{ events: FetchState<APIEventsResponse> }> = ({ events }) => {
+const _Events: FC<
+  { events: FetchState<APIEventsResponse> } & REPStackScreenProps<'Main'>
+> = ({ events, navigation }) => {
   const { data: eventsData, status: eventsStatus } = events;
 
   const listKeyExtractor = useCallback((item) => item._id, []);
@@ -58,11 +60,12 @@ const _Events: FC<{ events: FetchState<APIEventsResponse> }> = ({ events }) => {
         <Card
           index={i}
           event={event}
+          navigation={navigation}
           handleEventDetailsPress={handleEventDetailsPress}
         />
       );
     },
-    [handleEventDetailsPress]
+    [handleEventDetailsPress, navigation]
   );
 
   return (

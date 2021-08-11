@@ -1,23 +1,41 @@
-import React, { FC, useCallback, memo, useState } from 'react';
+import React, { FC, useCallback, memo, useState, useMemo } from 'react';
 import { View } from 'react-native';
 
 import { dispatch, displaySnackbar, displayActionSheet } from 'src/state';
 import { eventsStyles, actionSheetOptionsStyles } from 'src/styles';
 import { REPText } from 'src/components';
-import { colors } from 'src/constants';
+import { colors, space } from 'src/constants';
 import { APIEventsResponse } from 'src/types';
 import { Button, IconButton } from 'react-native-paper';
 
 const _Actions: FC<{
   event?: APIEventsResponse[0];
   handleDisplayDetails?(): void;
-}> = ({ handleDisplayDetails }) => {
+  onDetailsScreen?: boolean;
+}> = ({ handleDisplayDetails, onDetailsScreen }) => {
   const duration = 3000;
   const [actions, setActions] = useState({
     love: false,
     attend: false,
     partner: false
   });
+  const cardActionsStyle = useMemo(
+    () => ({
+      ...eventsStyles.cardActions,
+      ...(onDetailsScreen
+        ? {
+            paddingBottom: space.xs * 1.5,
+            borderColor: '#eee',
+            borderBottomWidth: 1,
+            borderTopWidth: 0,
+            marginTop: 0,
+            paddingTop: 0
+          }
+        : {})
+    }),
+    [onDetailsScreen]
+  );
+  const buttonSize = onDetailsScreen ? 27 : 20;
 
   const handleLoveActionPress = useCallback(() => {
     setActions((prevActionsState) => ({
@@ -50,7 +68,7 @@ const _Actions: FC<{
         open: true,
         duration,
         message:
-          'You indicated you will attend this event! ... (PS. This is a dummy and is still under development.) 😎',
+          'You will be attending this event! ... (PS. This is a dummy and is still under development.) 😎',
         severity: 'success'
       })
     );
@@ -143,10 +161,10 @@ const _Actions: FC<{
   }, [actions.partner]);
 
   return (
-    <View style={eventsStyles.cardActions}>
+    <View style={cardActionsStyle}>
       <IconButton
         icon={`heart${actions.love ? '' : '-outline'}`}
-        size={20}
+        size={buttonSize}
         animated
         color={actions.love ? colors.green : colors.grey}
         style={eventsStyles.cardActionsButton}
@@ -154,7 +172,7 @@ const _Actions: FC<{
       />
       <IconButton
         icon={`account-check${actions.attend ? '' : '-outline'}`}
-        size={20}
+        size={buttonSize}
         animated
         color={actions.attend ? colors.green : colors.grey}
         style={eventsStyles.cardActionsButton}
@@ -162,7 +180,7 @@ const _Actions: FC<{
       />
       <IconButton
         icon='hand-left'
-        size={20}
+        size={buttonSize}
         animated
         color={actions.partner ? colors.green : colors.grey}
         style={eventsStyles.cardActionsButton}
@@ -171,7 +189,7 @@ const _Actions: FC<{
 
       <IconButton
         icon='comment-text-outline'
-        size={20}
+        size={buttonSize}
         animated
         color={colors.grey}
         style={{
@@ -180,14 +198,16 @@ const _Actions: FC<{
         }}
         onPress={handleDisplayDetails}
       />
-      <IconButton
-        icon='information-outline'
-        size={20}
-        animated
-        color={colors.grey}
-        style={eventsStyles.cardActionsButton}
-        onPress={handleDisplayDetails}
-      />
+      {!onDetailsScreen && (
+        <IconButton
+          icon='information-outline'
+          size={buttonSize}
+          animated
+          color={colors.grey}
+          style={eventsStyles.cardActionsButton}
+          onPress={handleDisplayDetails}
+        />
+      )}
     </View>
   );
 };
