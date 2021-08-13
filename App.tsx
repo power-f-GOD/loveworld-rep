@@ -27,7 +27,7 @@ const theme: typeof DefaultTheme = {
   roundness: space.xs,
   colors: {
     ...DefaultTheme.colors,
-    primary: colors.white,
+    primary: colors.black,
     accent: colors.green
   },
   fonts: {

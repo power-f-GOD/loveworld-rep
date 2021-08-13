@@ -35,7 +35,7 @@ export const Logo: FC<{
                 transform: [
                   { scale: 0.75 },
                   { translateX: -space.sm - 2 },
-                  { translateY: space.xs - 2 }
+                  { translateY: -space.xs }
                 ]
               }
             : undefined

@@ -44,9 +44,9 @@ const _REPFAB: FC<{
         displayModal({
           open: true,
           title:
-            action?.replace('a new ', '') ||
+            action ||
             (`${
-              currentTab === 'Records' ? 'Add' : 'Create'
+              currentTab === 'Records' ? 'Add a new' : 'Set a'
             } ${currentTab.replace(/s$/, '')}` as any),
           children: [
             <REPAnimate magnitude={0} key={0}>
@@ -60,7 +60,7 @@ const _REPFAB: FC<{
   );
 
   const handleSetTargetPress = useCallback(() => {
-    handleActionPress('Create a new Target');
+    handleActionPress('Set a new Target');
   }, [handleActionPress]);
 
   const handleAddRecordPress = useCallback(() => {
@@ -120,7 +120,7 @@ const S = StyleSheet.create({
     position: 'absolute',
     margin: 16,
     right: 0,
-    bottom: 50
+    bottom: 55
   }
 });
 

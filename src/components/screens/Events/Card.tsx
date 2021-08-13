@@ -8,17 +8,20 @@ import { APIEventsResponse, EventDetailsHandler } from 'src/types';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { MainInfo } from './MainInfo';
 import { Actions } from './Actions';
+import { SharedElement } from 'react-navigation-shared-element';
+import { useRoute, useNavigation } from '@react-navigation/native';
 
 const _Card: FC<
-  { index: number; event: APIEventsResponse[0] } & EventDetailsHandler & any
-> = ({ index: i, event, handleEventDetailsPress, navigation }) => {
+  { index: number; event: APIEventsResponse[0] } & EventDetailsHandler
+> = ({ index: i, event, handleEventDetailsPress }) => {
+  const navigation = useNavigation();
   const imageSrc: ImageSourcePropType = event.banner
     ? { uri: event.banner }
     : require('src/assets/green-leaves.png');
 
   const handleDisplayDetails = useCallback(
     () => navigation.navigate('EventDetails', { event, imageSrc }), // handleEventDetailsPress!(event, imageSrc),
-    []
+    [navigation]
   );
 
   return (
@@ -47,9 +50,11 @@ const _Card: FC<
         <TouchableOpacity
           onPress={handleDisplayDetails}
           style={eventsStyles.cardBannerWrapperTouchable}>
-          <View style={eventsStyles.cardBannerWrapper}>
+          <SharedElement
+            id={`event.${event._id}.banner`}
+            style={eventsStyles.cardBannerWrapper}>
             <Image style={eventsStyles.cardBanner} source={imageSrc} />
-          </View>
+          </SharedElement>
         </TouchableOpacity>
 
         <View style={eventsStyles.cardInfoWrapper}>
@@ -59,7 +64,11 @@ const _Card: FC<
             renderPartial
           />
 
-          <Actions handleDisplayDetails={handleDisplayDetails} />
+          <Actions
+            handleDisplayDetails={handleDisplayDetails}
+            imageSrc={imageSrc}
+            event={event}
+          />
         </View>
       </View>
     </REPAnimate>

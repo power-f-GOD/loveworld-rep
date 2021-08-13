@@ -1,5 +1,5 @@
 import React, { FC, useCallback, memo, useState, useMemo } from 'react';
-import { View } from 'react-native';
+import { View, ImageSourcePropType } from 'react-native';
 
 import { dispatch, displaySnackbar, displayActionSheet } from 'src/state';
 import { eventsStyles, actionSheetOptionsStyles } from 'src/styles';
@@ -7,12 +7,15 @@ import { REPText } from 'src/components';
 import { colors, space } from 'src/constants';
 import { APIEventsResponse } from 'src/types';
 import { Button, IconButton } from 'react-native-paper';
+import { useNavigation } from '@react-navigation/native';
 
 const _Actions: FC<{
   event?: APIEventsResponse[0];
   handleDisplayDetails?(): void;
   onDetailsScreen?: boolean;
-}> = ({ handleDisplayDetails, onDetailsScreen }) => {
+  imageSrc?: ImageSourcePropType;
+}> = ({ event: _event, handleDisplayDetails, imageSrc, onDetailsScreen }) => {
+  const navigation = useNavigation();
   const duration = 3000;
   const [actions, setActions] = useState({
     love: false,
@@ -35,7 +38,9 @@ const _Actions: FC<{
     }),
     [onDetailsScreen]
   );
+  const event = useMemo(() => _event, []);
   const buttonSize = onDetailsScreen ? 27 : 20;
+  const buttonLabelTextSize = onDetailsScreen ? 12 : 10;
 
   const handleLoveActionPress = useCallback(() => {
     setActions((prevActionsState) => ({
@@ -84,20 +89,20 @@ const _Actions: FC<{
     }
 
     const handlePartnershipTypePress = (
-      type: 'praying' | 'giving' | 'spreading'
+      partnershipType: 'pray' | 'give' | 'spread' | 'invite'
     ) => () => {
       let message = 'Thank you for showing interest in partnership. ';
 
-      switch (type) {
-        case 'praying':
+      switch (partnershipType) {
+        case 'pray':
           message +=
             'A link will be sent to your email which you can click to join the network of praying partners for the event.';
           break;
-        case 'giving':
+        case 'give':
           message +=
             'You will be redirected to where you will give (make payment) for the event.';
           break;
-        case 'spreading':
+        case 'spread':
           message +=
             'A link will be sent to your email which you can share to friends and family for the event.';
           break;
@@ -110,14 +115,19 @@ const _Actions: FC<{
         partner: true
       }));
       dispatch(displayActionSheet({ open: false }));
-      dispatch(
-        displaySnackbar({
-          open: true,
-          duration,
-          message,
-          severity: 'success'
-        })
-      );
+
+      if (partnershipType === 'invite') {
+        navigation.navigate('EventInvite', { event, imageSrc });
+      } else {
+        dispatch(
+          displaySnackbar({
+            open: true,
+            duration,
+            message,
+            severity: 'success'
+          })
+        );
+      }
     };
 
     dispatch(
@@ -127,77 +137,115 @@ const _Actions: FC<{
         options: [
           <Button
             mode='text'
-            onPress={handlePartnershipTypePress('praying')}
+            onPress={handlePartnershipTypePress('pray')}
             style={actionSheetOptionsStyles.button}
             contentStyle={actionSheetOptionsStyles.buttonContent}
-            key={'praying'}>
+            key={'pray'}>
             <REPText color={colors.black} bold>
-              BY PRAYING
+              PRAY
             </REPText>
           </Button>,
           <Button
             mode='text'
-            onPress={handlePartnershipTypePress('giving')}
+            onPress={handlePartnershipTypePress('give')}
             style={actionSheetOptionsStyles.button}
             contentStyle={actionSheetOptionsStyles.buttonContent}
-            key={'giving'}>
+            key={'give'}>
             <REPText color={colors.black} bold>
-              BY GIVING
+              GIVE
             </REPText>
           </Button>,
           <Button
             mode='text'
-            onPress={handlePartnershipTypePress('spreading')}
+            onPress={handlePartnershipTypePress('spread')}
             style={actionSheetOptionsStyles.button}
             contentStyle={actionSheetOptionsStyles.buttonContent}
-            key={'spreading'}>
+            key={'spread'}>
             <REPText color={colors.black} bold>
               SPREAD THE WORD
+            </REPText>
+          </Button>,
+          <Button
+            mode='text'
+            onPress={handlePartnershipTypePress('invite')}
+            style={actionSheetOptionsStyles.button}
+            contentStyle={actionSheetOptionsStyles.buttonContent}
+            key={'spread'}>
+            <REPText color={colors.black} bold>
+              INVITE SOMEONE
             </REPText>
           </Button>
         ]
       })
     );
-  }, [actions.partner]);
+  }, [actions.partner, event]);
 
   return (
     <View style={cardActionsStyle}>
-      <IconButton
-        icon={`heart${actions.love ? '' : '-outline'}`}
-        size={buttonSize}
-        animated
-        color={actions.love ? colors.green : colors.grey}
-        style={eventsStyles.cardActionsButton}
-        onPress={handleLoveActionPress}
-      />
-      <IconButton
-        icon={`account-check${actions.attend ? '' : '-outline'}`}
-        size={buttonSize}
-        animated
-        color={actions.attend ? colors.green : colors.grey}
-        style={eventsStyles.cardActionsButton}
-        onPress={handleAttendActionPress}
-      />
-      <IconButton
-        icon='hand-left'
-        size={buttonSize}
-        animated
-        color={actions.partner ? colors.green : colors.grey}
-        style={eventsStyles.cardActionsButton}
-        onPress={handlePartnerActionPress}
-      />
+      <View style={eventsStyles.cardActionsButtonWrapper}>
+        <IconButton
+          icon={`heart${actions.love ? '' : '-outline'}`}
+          size={buttonSize}
+          animated
+          color={actions.love ? colors.green : colors.grey}
+          style={eventsStyles.cardActionsButton}
+          onPress={handleLoveActionPress}
+        />
+        <REPText
+          size={buttonLabelTextSize}
+          color={actions.love ? colors.green : colors.grey}>
+          5.1K
+        </REPText>
+      </View>
 
-      <IconButton
-        icon='comment-text-outline'
-        size={buttonSize}
-        animated
-        color={colors.grey}
+      <View style={eventsStyles.cardActionsButtonWrapper}>
+        <IconButton
+          icon={`account-check${actions.attend ? '' : '-outline'}`}
+          size={buttonSize}
+          animated
+          color={actions.attend ? colors.green : colors.grey}
+          style={eventsStyles.cardActionsButton}
+          onPress={handleAttendActionPress}
+        />
+        <REPText
+          size={buttonLabelTextSize}
+          color={actions.attend ? colors.green : colors.grey}>
+          2K
+        </REPText>
+      </View>
+
+      <View style={eventsStyles.cardActionsButtonWrapper}>
+        <IconButton
+          icon='hand'
+          size={buttonSize}
+          animated
+          color={actions.partner ? colors.green : colors.grey}
+          style={eventsStyles.cardActionsButton}
+          onPress={handlePartnerActionPress}
+        />
+        <REPText
+          size={buttonLabelTextSize}
+          color={actions.partner ? colors.green : colors.grey}>
+          10K
+        </REPText>
+      </View>
+
+      <View
         style={{
-          ...eventsStyles.cardActionsButton,
+          ...eventsStyles.cardActionsButtonWrapper,
           marginLeft: 'auto'
-        }}
-        onPress={handleDisplayDetails}
-      />
+        }}>
+        <IconButton
+          icon='comment-text-outline'
+          size={buttonSize}
+          animated
+          color={colors.grey}
+          style={eventsStyles.cardActionsButton}
+          onPress={handleDisplayDetails}
+        />
+        <REPText size={buttonLabelTextSize}>57</REPText>
+      </View>
+
       {!onDetailsScreen && (
         <IconButton
           icon='information-outline'

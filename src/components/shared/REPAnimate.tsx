@@ -1,10 +1,11 @@
-import React, { FC, Children } from 'react';
+import React, { FC, Children, cloneElement, memo } from 'react';
 import { StyleProp, ViewStyle } from 'react-native';
 import { View as MotiView } from 'moti';
 import { space } from 'src/constants';
 
-export const REPAnimate: FC<{
+interface REPAnimateProps {
   style?: StyleProp<ViewStyle>;
+  contentStyle?: StyleProp<ViewStyle>;
   direction?: 'x' | 'y';
   magnitude?: number;
   easing?: 'spring' | 'timing';
@@ -13,8 +14,11 @@ export const REPAnimate: FC<{
   duration?: number;
   noAnimate?: boolean;
   loop?: boolean;
-}> = ({
+}
+
+const _REPAnimate: FC<REPAnimateProps> = ({
   style,
+  contentStyle,
   direction,
   duration,
   magnitude,
@@ -28,9 +32,29 @@ export const REPAnimate: FC<{
   return Children.map(children, (child: any, i) => {
     if (!child?.props) return child;
 
-    const { animationDelay, animationDuration } = child.props.style || {};
+    const { style: childStyle } = child.props;
+    const { animationDelay, animationDuration } = childStyle || {};
     const isX = direction === 'x';
     const isScale = type === 'scale';
+    let childNewStyle = {};
+
+    if ('0' in (childStyle || {})) {
+      for (const [, _style] of Object.entries(childStyle)) {
+        childNewStyle = { ...(_style || ({} as any)), ...childNewStyle };
+      }
+    } else {
+      childNewStyle = { ...(childStyle || ({} as any)) };
+    }
+
+    if (contentStyle) {
+      if ('0' in contentStyle) {
+        for (const [, _style] of Object.entries(contentStyle)) {
+          childNewStyle = { ...(_style || ({} as any)), ...childNewStyle };
+        }
+      } else {
+        childNewStyle = { ...(contentStyle || ({} as any)), ...childNewStyle };
+      }
+    }
 
     return (
       <MotiView
@@ -67,8 +91,10 @@ export const REPAnimate: FC<{
               : 350,
           loop
         }}>
-        {child}
+        {cloneElement(child, { style: childNewStyle })}
       </MotiView>
     );
   });
 };
+
+export const REPAnimate: FC<REPAnimateProps> = memo(_REPAnimate);

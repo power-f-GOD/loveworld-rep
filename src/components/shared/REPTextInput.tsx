@@ -126,13 +126,13 @@ const _REPTextInput: FC<
   useEffect(() => {
     setTimeout(() => {
       labelAnimState.transitionTo(isFocused || hasValue ? 'focused' : 'from');
-    }, 50);
+    }, 20);
   }, [isFocused, labelAnimState, hasValue]);
 
   useEffect(() => {
     setTimeout(() => {
       helperTextAnimState.transitionTo(!err ? 'from' : 'invalid');
-    }, 50);
+    }, 20);
   }, [helperTextAnimState, err]);
 
   return (

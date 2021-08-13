@@ -42,6 +42,28 @@ const _Dashboard: FC<{ userData: UserData; numEvents: number }> = ({
               bold>
               0
             </REPText>
+            <View
+              style={{
+                bottom: space.xs * 1.5,
+                left: space.xs * 1.5,
+                position: 'absolute',
+                opacity: 0.85
+              }}>
+              <REPText
+                lineHeight={space.xs * 2}
+                size={14}
+                color={colors.white}
+                bold>
+                Records
+              </REPText>
+              <REPText
+                lineHeight={space.xs * 1.5}
+                size={12}
+                color={colors.white}>
+                set
+              </REPText>
+            </View>
+
             <View style={S.boxCircle}>
               {/* <REPText
               style={S.boxCircleText}
@@ -67,6 +89,28 @@ const _Dashboard: FC<{ userData: UserData; numEvents: number }> = ({
               bold>
               {numEvents}
             </REPText>
+            <View
+              style={{
+                bottom: space.xs * 1.5,
+                left: space.xs * 1.5,
+                position: 'absolute',
+                opacity: 0.85
+              }}>
+              <REPText
+                lineHeight={space.xs * 2}
+                size={14}
+                color={colors.white}
+                bold>
+                Events
+              </REPText>
+              <REPText
+                lineHeight={space.xs * 1.5}
+                size={12}
+                color={colors.white}>
+                upcoming
+              </REPText>
+            </View>
+
             <View style={S.boxCircle}>
               <MaterialIcons
                 name='calendar-month'
@@ -85,6 +129,28 @@ const _Dashboard: FC<{ userData: UserData; numEvents: number }> = ({
               bold>
               0
             </REPText>
+            <View
+              style={{
+                bottom: space.xs * 1.5,
+                left: space.xs * 1.5,
+                position: 'absolute',
+                opacity: 0.85
+              }}>
+              <REPText
+                lineHeight={space.xs * 2}
+                size={14}
+                color={colors.white}
+                bold>
+                Projects
+              </REPText>
+              <REPText
+                lineHeight={space.xs * 1.5}
+                size={12}
+                color={colors.white}>
+                pending
+              </REPText>
+            </View>
+
             <View style={S.boxCircle}>
               <MaterialIcons
                 name='cash'
@@ -96,15 +162,27 @@ const _Dashboard: FC<{ userData: UserData; numEvents: number }> = ({
           </View>
         </REPAnimate>
       </ScrollView>
+
+      <REPText mt={space.sm} size={fonts.h3.fontSize}>
+        Exploits Graph:
+      </REPText>
       <View
         style={{
-          height: space.xxl * 2,
-          marginVertical: space.md,
+          height: space.xxl * 2.5,
+          marginVertical: space.xs,
           backgroundColor: colors.white,
           borderRadius: space.xs,
           borderColor: '#ddd',
-          borderWidth: 1
-        }}></View>
+          borderWidth: 1,
+          padding: space.sm,
+          justifyContent: 'center'
+        }}>
+        <REPText bold alignment='center' color={colors.grey}>
+          Displayed here will be a graph of Records you have set per time,
+          Events you have participated in, and Projects you have sponsored per
+          time
+        </REPText>
+      </View>
     </ScrollView>
   );
 };

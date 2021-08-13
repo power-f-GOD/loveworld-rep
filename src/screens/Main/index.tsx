@@ -12,13 +12,14 @@ import MaterialIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { connect } from 'react-redux';
 import { useAnimationState, MotiView } from 'moti';
 import { TouchableNativeFeedback, View, StyleSheet } from 'react-native';
+import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 
 import { Dashboard } from './Dashboard';
 import { MainStackParamList, REPStackScreenProps, UserData } from 'src/types';
 import { Records } from './Records';
 import { Projects } from './Projects';
 import { Logo, REPText, REPAnimate, REPFAB } from 'src/components';
-import { colors, space } from 'src/constants';
+import { colors, space, fonts } from 'src/constants';
 import {
   dispatch,
   displayModal,
@@ -27,7 +28,7 @@ import {
 } from 'src/state';
 import { Events } from './Events';
 
-const Tab = createMaterialBottomTabNavigator();
+const Tab = createMaterialTopTabNavigator(); // createMaterialBottomTabNavigator();
 
 const _Main: FC<REPStackScreenProps<'Main'> & { userData: UserData }> = ({
   userData,
@@ -72,10 +73,9 @@ const _Main: FC<REPStackScreenProps<'Main'> & { userData: UserData }> = ({
     () => screenOptions('Dashboard', 'view-dashboard'),
     []
   );
-  const recordsOptions = useMemo(
-    () => screenOptions('Records', 'database'),
-    []
-  );
+  const recordsOptions = useMemo(() => screenOptions('Records', 'database'), [
+    screenOptions
+  ]);
   const eventsOptions = useMemo(
     () => screenOptions('Events', 'calendar-month'),
     []
@@ -106,7 +106,7 @@ const _Main: FC<REPStackScreenProps<'Main'> & { userData: UserData }> = ({
 
   return (
     <>
-      <Appbar.Header style={{ marginTop: 0 }}>
+      <Appbar.Header style={{ marginTop: 0, backgroundColor: colors.white }}>
         <Appbar.Content
           title={
             <Logo
@@ -148,23 +148,53 @@ const _Main: FC<REPStackScreenProps<'Main'> & { userData: UserData }> = ({
 
       <Tab.Navigator
         barStyle={{ backgroundColor: barColor }}
+        tabBarPosition='bottom'
         // initialRouteName='Events'
-        screenListeners={screenListeners}>
+        screenOptions={{
+          tabBarStyle: { backgroundColor: barColor },
+          tabBarItemStyle: {
+            maxHeight: 65,
+            paddingTop: space.xs * 0.75,
+            paddingBottom: 0
+          },
+          tabBarLabelStyle: {
+            fontSize: 10,
+            textTransform: 'capitalize',
+            fontFamily: fonts.regular
+          },
+          tabBarIndicatorStyle: {
+            backgroundColor: currentTabIsDash ? colors.black : colors.white
+          },
+          tabBarPressColor: colors.white,
+          tabBarBounces: true,
+          tabBarInactiveTintColor: currentTabIsDash
+            ? 'rgba(0, 0, 0, 0.35)'
+            : 'rgba(255, 255, 255, 0.5)',
+          tabBarActiveTintColor: currentTabIsDash ? colors.black : colors.white
+        }}>
         <Tab.Screen
           name='Dashboard'
           component={Dashboard}
           options={dashboardOptions}
+          listeners={screenListeners}
         />
         <Tab.Screen
           name='Records'
           component={Records}
           options={recordsOptions}
+          listeners={screenListeners}
         />
-        <Tab.Screen name='Events' component={Events} options={eventsOptions} />
+        <Tab.Screen
+          name='Events'
+          component={Events}
+          options={eventsOptions}
+          listeners={screenListeners}
+        />
         <Tab.Screen
           name='Projects'
           component={Projects}
           options={projectsOptions}
+          listeners={screenListeners}
         />
       </Tab.Navigator>
 

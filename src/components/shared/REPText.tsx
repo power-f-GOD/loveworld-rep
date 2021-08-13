@@ -1,4 +1,4 @@
-import React, { FC, memo } from 'react';
+import React, { FC, memo, useMemo } from 'react';
 import {
   StyleProp,
   ViewStyle,
@@ -15,29 +15,64 @@ export const REPText: FC<{
   style?: StyleProp<TextStyle>;
   bold?: boolean;
   size?: number;
+  alignment?: 'left' | 'center' | 'right';
+  lineHeight?: number;
   color?: string;
-}> = ({ style, bold, color, size, children }) => {
+  margin?: number;
+  my?: number;
+  mx?: number;
+  ms?: number;
+  me?: number;
+  mt?: number;
+  mb?: number;
+}> = ({
+  margin,
+  my,
+  mx,
+  me,
+  ms,
+  mt,
+  mb,
+  style: _style,
+  bold,
+  color,
+  size,
+  alignment,
+  lineHeight,
+  children
+}) => {
+  let style = {};
+
+  if ('0' in (_style || {})) {
+    for (const [, __style] of Object.entries(_style || {})) {
+      style = { ...(__style || ({} as any)), ...style };
+    }
+  } else {
+    style = { ...(_style || ({} as any)) };
+  }
+
   return (
     <Text
-      style={[
-        style || {},
-        {
-          fontFamily: bold ? fonts.bold : fonts.regular,
-          fontSize: size || 14,
-          color: color || colors.black
-        }
-      ]}>
+      style={useMemo(
+        () =>
+          ({
+            ...(style || ({} as Record<string, any>)),
+            fontFamily: bold ? fonts.bold : fonts.regular,
+            fontSize: size || 14,
+            color: color || colors.black,
+            ...(lineHeight ? { lineHeight } : {}),
+            ...(alignment ? { textAlign: alignment } : {}),
+            ...(margin !== undefined ? { margin } : {}),
+            ...(my !== undefined ? { marginVertical: my } : {}),
+            ...(mx !== undefined ? { marginHorizontal: mx } : {}),
+            ...(mb !== undefined ? { marginBottom: mb } : {}),
+            ...(mt !== undefined ? { marginTop: mt } : {}),
+            ...(me !== undefined ? { marginEnd: me } : {}),
+            ...(ms !== undefined ? { marginStart: ms } : {})
+          } as StyleProp<TextStyle>),
+        []
+      )}>
       {children}
     </Text>
   );
 };
-
-// const S = StyleSheet.create({
-//   link: {
-//     textTransform: 'capitalize',
-//     maxWidth: '100%',
-//     height: 22,
-//     alignContent: 'flex-end',
-//     justifyContent: 'flex-end'
-//   }
-// });

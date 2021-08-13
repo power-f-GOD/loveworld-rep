@@ -42,8 +42,9 @@ export const eventsStyles = StyleSheet.create({
     borderTopWidth: 1,
     flexDirection: 'row',
     marginTop: space.xs,
-    paddingTop: space.xs
+    paddingTop: space.xs * 0.75
   },
+  cardActionsButtonWrapper: { alignItems: 'center' },
   cardActionsButton: {
     borderWidth: 1,
     borderColor: '#eee',

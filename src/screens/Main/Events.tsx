@@ -60,7 +60,6 @@ const _Events: FC<
         <Card
           index={i}
           event={event}
-          navigation={navigation}
           handleEventDetailsPress={handleEventDetailsPress}
         />
       );
