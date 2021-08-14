@@ -1,34 +1,36 @@
 import React, { FC, memo } from 'react';
 import { Image, View, ImageSourcePropType } from 'react-native';
+import { SharedElement } from 'react-navigation-shared-element';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RouteProp } from '@react-navigation/native';
 
-import { REPAnimate, REPText } from 'src/components';
-import { MainInfo } from '../__commons/MainInfo';
+import { ProjectInfo, ProjectActions } from 'src/components/screens/Projects';
+import { REPAnimate, REPText } from 'src/components/shared';
 import { eventsStyles } from 'src/styles';
 import { space, colors, fonts } from 'src/constants';
-import { Actions } from '../__commons/Actions';
-import { SharedElement } from 'react-navigation-shared-element';
-import { StackScreenProps, StackNavigationProp } from '@react-navigation/stack';
-import { RouteProp } from '@react-navigation/native';
-import { APIEventsResponse } from 'src/types';
+import { APIProjectsResponse } from 'src/types';
 
-interface EventDetailsRouteProps {
-  event: APIEventsResponse[0];
+interface ProjectDetailsRouteProps {
+  project: APIProjectsResponse[0];
   imageSrc: ImageSourcePropType;
 }
 
-const _EventDetails: FC<{
+const _ProjectDetails: FC<{
   navigation: StackNavigationProp<
     {
-      EventDetails: EventDetailsRouteProps;
+      ProjectDetails: ProjectDetailsRouteProps;
     },
-    'EventDetails'
+    'ProjectDetails'
   >;
-  route: RouteProp<{ EventDetails: EventDetailsRouteProps }, 'EventDetails'>;
-}> = ({ navigation, route }) => {
-  const event = route.params?.event;
+  route: RouteProp<
+    { ProjectDetails: ProjectDetailsRouteProps },
+    'ProjectDetails'
+  >;
+}> = ({ route }) => {
+  const project = route.params?.project;
   const imageSrc = route?.params.imageSrc;
 
-  if (!event) {
+  if (!project) {
     return null;
   }
 
@@ -43,21 +45,21 @@ const _EventDetails: FC<{
         magnitude={space.xs}
         delay={0}
         contentStyle={{ paddingHorizontal: space.xs }}>
-        <REPText size={fonts.h2.fontSize} mb={space.xs} bold>
-          {event.title}
+        <REPText size={fonts.h2.fontSize} bold>
+          {project.title}
         </REPText>
 
-        <MainInfo event={event} />
+        <ProjectInfo project={project} />
 
         <REPText
           // size={fonts.h2.fontSize}
           mt={space.xs}
           style={{ marginBottom: space.xxs }}>
-          {event.details}
+          {project.details}
         </REPText>
 
         <SharedElement
-          id={`event.${event._id}.banner`}
+          id={`project.${project._id}.banner`}
           style={{
             minHeight: 250,
             marginVertical: space.xs * 1.5,
@@ -75,7 +77,11 @@ const _EventDetails: FC<{
           />
         </SharedElement>
 
-        <Actions event={event} onDetailsScreen={true} imageSrc={imageSrc} />
+        <ProjectActions
+          project={project}
+          onDetailsScreen={true}
+          imageSrc={imageSrc}
+        />
 
         <REPText size={space.xs + 4} my={space.sm} color={colors.grey}>
           Comments will appear below...
@@ -85,4 +91,4 @@ const _EventDetails: FC<{
   );
 };
 
-export const EventDetails = memo(_EventDetails);
+export const ProjectDetails = memo(_ProjectDetails);

@@ -1,24 +1,15 @@
 import React, { FC, memo, Fragment } from 'react';
-import {
-  Image,
-  View,
-  ImageSourcePropType,
-  ScrollView,
-  StatusBar
-} from 'react-native';
+import { Image, View, ImageSourcePropType, ScrollView } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import { SharedElement } from 'react-navigation-shared-element';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RouteProp } from '@react-navigation/native';
+import { TextInput, Button } from 'react-native-paper';
 
-import { REPAnimate, REPText } from 'src/components';
-import { MainInfo } from '../__commons/MainInfo';
+import { REPText } from 'src/components';
 import { eventsStyles } from 'src/styles';
 import { space, colors, fonts } from 'src/constants';
-import { Actions } from '../__commons/Actions';
-import { SharedElement } from 'react-navigation-shared-element';
-import { StackScreenProps, StackNavigationProp } from '@react-navigation/stack';
-import { RouteProp } from '@react-navigation/native';
 import { APIEventsResponse } from 'src/types';
-import { TextInput, Button } from 'react-native-paper';
-import { REPButton } from 'src/components/shared';
 import { displaySnackbar, dispatch } from 'src/state';
 
 interface EventInviteRouteProps {
@@ -34,7 +25,7 @@ const _EventInvite: FC<{
     'EventInvite'
   >;
   route: RouteProp<{ EventInvite: EventInviteRouteProps }, 'EventInvite'>;
-}> = ({ navigation, route }) => {
+}> = ({ route }) => {
   const event = route.params?.event;
   const imageSrc = route?.params.imageSrc;
 

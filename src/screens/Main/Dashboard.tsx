@@ -19,6 +19,8 @@ const _Dashboard: FC<{
   numEvents: number;
   numProjects: number;
 }> = ({ userData, numEvents, numProjects }) => {
+  const cardTextLineHeight = space.xs * 2.25;
+
   useEffect(() => {
     if (!numEvents) {
       dispatch(fetchEvents());
@@ -62,13 +64,16 @@ const _Dashboard: FC<{
                 opacity: 0.85
               }}>
               <REPText
-                lineHeight={space.xs * 2.5}
+                lineHeight={cardTextLineHeight}
                 size={14}
                 color={colors.white}
                 bold>
                 Records
               </REPText>
-              <REPText lineHeight={space.xs * 2} size={12} color={colors.white}>
+              <REPText
+                lineHeight={cardTextLineHeight * 0.8}
+                size={12}
+                color={colors.white}>
                 set
               </REPText>
             </View>
@@ -106,13 +111,16 @@ const _Dashboard: FC<{
                 opacity: 0.85
               }}>
               <REPText
-                lineHeight={space.xs * 2.5}
+                lineHeight={cardTextLineHeight}
                 size={14}
                 color={colors.white}
                 bold>
                 Events
               </REPText>
-              <REPText lineHeight={space.xs * 2} size={12} color={colors.white}>
+              <REPText
+                lineHeight={cardTextLineHeight * 0.8}
+                size={12}
+                color={colors.white}>
                 upcoming
               </REPText>
             </View>
@@ -143,13 +151,16 @@ const _Dashboard: FC<{
                 opacity: 0.85
               }}>
               <REPText
-                lineHeight={space.xs * 2.5}
+                lineHeight={cardTextLineHeight}
                 size={14}
                 color={colors.white}
                 bold>
                 Projects
               </REPText>
-              <REPText lineHeight={space.xs * 2} size={12} color={colors.white}>
+              <REPText
+                lineHeight={cardTextLineHeight * 0.8}
+                size={12}
+                color={colors.white}>
                 pending
               </REPText>
             </View>

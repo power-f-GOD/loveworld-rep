@@ -76,4 +76,5 @@ export type APIProjectsResponse = Array<{
   updated_at: string;
   __v: 0;
   event: string;
+  completion?: number;
 }>;

@@ -8,13 +8,12 @@ import { fonts, space, colors } from 'src/constants';
 import { APIEventsResponse, APIProjectsResponse } from 'src/types';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
-export const _MainInfo: FC<{
-  event?: APIEventsResponse[0];
-  project?: APIProjectsResponse[0];
+export const _EventInfo: FC<{
+  event: APIEventsResponse[0];
   renderPartial?: boolean;
   style?: StyleProp<ViewStyle>;
   handleDisplayDetails?(): void;
-}> = ({ event, project, renderPartial, style, handleDisplayDetails }) => {
+}> = ({ event, renderPartial, style, handleDisplayDetails }) => {
   return (
     <View style={style}>
       {renderPartial && (
@@ -24,7 +23,7 @@ export const _MainInfo: FC<{
               size={fonts.h4.fontSize}
               bold
               style={{ flex: 1, flexWrap: 'wrap' }}>
-              {event?.title || project?.title}
+              {event.title}
             </REPText>
           </View>
         </TouchableOpacity>
@@ -37,7 +36,7 @@ export const _MainInfo: FC<{
           style={eventsStyles.cardInfoIcon}
         />
         <REPText size={space.xs + 4} color={colors.grey}>
-          {event?.organization.name || project?.organization.name}
+          {event.organization.name}
         </REPText>
       </View>
 
@@ -48,7 +47,7 @@ export const _MainInfo: FC<{
             // flex: 1,
             flexWrap: 'wrap'
           }}>
-          {!renderPartial && (
+          {!renderPartial && event && (
             <>
               <View
                 style={{ flexDirection: 'row', marginRight: space.sm * 1.75 }}>
@@ -58,9 +57,7 @@ export const _MainInfo: FC<{
                   style={eventsStyles.cardInfoIcon}
                 />
                 <REPText size={space.xs + 4} color={colors.grey}>
-                  {new Date(
-                    event?.date || project?.date || Date.now()
-                  ).toDateString()}
+                  {new Date(event.date || Date.now()).toDateString()}
                 </REPText>
               </View>
               <View
@@ -71,9 +68,7 @@ export const _MainInfo: FC<{
                   style={eventsStyles.cardInfoIcon}
                 />
                 <REPText size={space.xs + 4} color={colors.grey}>
-                  {new Date(
-                    event?.date || project?.date || Date.now()
-                  ).getHours()}
+                  {new Date(event.date || Date.now()).getHours()}
                   :00
                 </REPText>
               </View>
@@ -89,7 +84,7 @@ export const _MainInfo: FC<{
               />
               <REPText size={space.xs + 4} color={colors.grey} bold>
                 {Math.floor(
-                  ((event?.date || project?.date || Date.now()) - Date.now()) /
+                  ((event.date || Date.now()) - Date.now()) /
                     (1000 * 60 * 60 * 24)
                 )}{' '}
                 days away
@@ -102,4 +97,4 @@ export const _MainInfo: FC<{
   );
 };
 
-export const MainInfo = memo(_MainInfo);
+export const EventInfo = memo(_EventInfo);

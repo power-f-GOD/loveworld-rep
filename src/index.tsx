@@ -18,9 +18,9 @@ import { dispatch } from 'src/state/store';
 import { verifyAuth } from 'src/state/actions';
 import { REPModal, REPSnackbar, REPActionSheet } from './components';
 import { colors, fontFamily, fonts, space } from './constants';
-import { EventDetails } from './components/screens/Events/EventDetails';
-import { EventInvite } from './components/screens/Events/EventInvite';
-import { ProjectDetails } from './components/screens/Projects/ProjectDetails';
+import { EventDetails } from './screens/Event.Details';
+import { EventInvite } from './screens/Event.Invite';
+import { ProjectDetails } from './screens/Project.Details';
 
 enableScreens();
 

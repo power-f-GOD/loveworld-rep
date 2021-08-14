@@ -57,7 +57,10 @@ export const colors = {
   warning: 'gold',
   success: 'green',
   error: '#d00',
-  info: '#333'
+  info: '#333',
+  orange: 'rgb(255, 167, 0)',
+  yellow: 'rgb(255, 244, 0)',
+  lime: 'rgb(163, 255, 0)'
 };
 
 export const space = {
