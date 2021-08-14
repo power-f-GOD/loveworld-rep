@@ -10,15 +10,17 @@ import {
   TransitionPresets,
   createStackNavigator
 } from '@react-navigation/stack';
+import { StatusBar } from 'react-native';
 
 import { AuthProps, REPSnackbarProps } from 'src/types';
 import { Login, Splash, Register, Main } from 'src/screens';
 import { dispatch } from 'src/state/store';
 import { verifyAuth } from 'src/state/actions';
 import { REPModal, REPSnackbar, REPActionSheet } from './components';
-import { EventDetails } from './components/screens/Events/EventDetails';
 import { colors, fontFamily, fonts, space } from './constants';
+import { EventDetails } from './components/screens/Events/EventDetails';
 import { EventInvite } from './components/screens/Events/EventInvite';
+import { ProjectDetails } from './components/screens/Projects/ProjectDetails';
 
 enableScreens();
 
@@ -38,6 +40,14 @@ const _App: FC<{
 
   return (
     <>
+      <StatusBar
+        animated={true}
+        backgroundColor={colors.black}
+        translucent={true}
+        // barStyle={'light-content'}
+        showHideTransition='slide'
+        // hidden={true}
+      />
       <NavigationContainer>
         <Stack.Navigator
           initialRouteName={
@@ -145,8 +155,39 @@ const _App: FC<{
                       },
                       headerTintColor: 'white',
                       gestureEnabled: true,
-                      ...TransitionPresets.ModalPresentationIOS
+                      ...TransitionPresets.ModalSlideFromBottomIOS
                     }}
+                  />
+                  <Stack.Screen
+                    name='ProjectDetails'
+                    component={ProjectDetails}
+                    options={{
+                      title: 'Project Details',
+                      headerStyle: {
+                        backgroundColor: colors.purple
+                      },
+                      headerTitleStyle: {
+                        color: colors.white,
+                        fontFamily: fonts.regular,
+                        fontWeight: '500',
+                        fontSize: fonts.h3.fontSize,
+                        marginTop: space.xxs,
+                        left: -space.sm
+                      },
+                      headerTintColor: 'white',
+                      // gestureEnabled: false,
+                      ...TransitionPresets.SlideFromRightIOS
+                    }}
+                    // sharedElementsConfig={(route, otherRoute, showing) => {
+                    //   const { event } = route.params;
+
+                    //   return [
+                    //     `event.${event._id}.banner`,
+                    //     `event.${event._id}.title`,
+                    //     `event.${event._id}.info`,
+                    //     `event.${event._id}.actions`
+                    //   ];
+                    // }}
                   />
                 </>
               );

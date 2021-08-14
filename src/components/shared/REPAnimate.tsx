@@ -33,7 +33,8 @@ const _REPAnimate: FC<REPAnimateProps> = ({
     if (!child?.props) return child;
 
     const { style: childStyle } = child.props;
-    const { animationDelay, animationDuration } = childStyle || {};
+    const animationDelay = Number(child.props['data-anim_delay']);
+    const animationDuration = Number(child.props['data-anim_duration']);
     const isX = direction === 'x';
     const isScale = type === 'scale';
     let childNewStyle = {};
@@ -79,16 +80,16 @@ const _REPAnimate: FC<REPAnimateProps> = ({
         }}
         transition={{
           type: easing || 'timing',
-          delay:
-            animationDelay !== undefined
-              ? animationDelay
-              : (delay || 0) + 125 * i,
-          duration:
-            animationDuration !== undefined
-              ? animationDuration
-              : duration !== undefined
-              ? duration
-              : 350,
+          delay: !isNaN(animationDelay)
+            ? animationDelay
+            : delay !== undefined
+            ? delay
+            : 0 + 125 * i,
+          duration: !isNaN(animationDuration)
+            ? animationDuration
+            : duration !== undefined
+            ? duration
+            : 350,
           loop
         }}>
         {cloneElement(child, { style: childNewStyle })}

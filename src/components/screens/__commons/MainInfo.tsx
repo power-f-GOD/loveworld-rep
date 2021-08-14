@@ -5,15 +5,16 @@ import MaterialIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { eventsStyles } from 'src/styles';
 import { REPText } from 'src/components';
 import { fonts, space, colors } from 'src/constants';
-import { APIEventsResponse } from 'src/types';
+import { APIEventsResponse, APIProjectsResponse } from 'src/types';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
 export const _MainInfo: FC<{
-  event: APIEventsResponse[0];
+  event?: APIEventsResponse[0];
+  project?: APIProjectsResponse[0];
   renderPartial?: boolean;
   style?: StyleProp<ViewStyle>;
   handleDisplayDetails?(): void;
-}> = ({ event, renderPartial, style, handleDisplayDetails }) => {
+}> = ({ event, project, renderPartial, style, handleDisplayDetails }) => {
   return (
     <View style={style}>
       {renderPartial && (
@@ -23,7 +24,7 @@ export const _MainInfo: FC<{
               size={fonts.h4.fontSize}
               bold
               style={{ flex: 1, flexWrap: 'wrap' }}>
-              {event.title}
+              {event?.title || project?.title}
             </REPText>
           </View>
         </TouchableOpacity>
@@ -36,7 +37,7 @@ export const _MainInfo: FC<{
           style={eventsStyles.cardInfoIcon}
         />
         <REPText size={space.xs + 4} color={colors.grey}>
-          {event.organization.name}
+          {event?.organization.name || project?.organization.name}
         </REPText>
       </View>
 
@@ -57,7 +58,9 @@ export const _MainInfo: FC<{
                   style={eventsStyles.cardInfoIcon}
                 />
                 <REPText size={space.xs + 4} color={colors.grey}>
-                  {new Date(event.date).toDateString()}
+                  {new Date(
+                    event?.date || project?.date || Date.now()
+                  ).toDateString()}
                 </REPText>
               </View>
               <View
@@ -68,22 +71,31 @@ export const _MainInfo: FC<{
                   style={eventsStyles.cardInfoIcon}
                 />
                 <REPText size={space.xs + 4} color={colors.grey}>
-                  {new Date(event.date).getHours()}:00
+                  {new Date(
+                    event?.date || project?.date || Date.now()
+                  ).getHours()}
+                  :00
                 </REPText>
               </View>
             </>
           )}
-          <View style={{ flexDirection: 'row' }}>
-            <MaterialIcons
-              name='timer-sand'
-              color={colors.grey}
-              style={eventsStyles.cardInfoIcon}
-            />
-            <REPText size={space.xs + 4} color={colors.grey} bold>
-              {Math.floor((event.date - Date.now()) / (1000 * 60 * 60 * 24))}{' '}
-              days away
-            </REPText>
-          </View>
+
+          {event && (
+            <View style={{ flexDirection: 'row' }}>
+              <MaterialIcons
+                name='timer-sand'
+                color={colors.grey}
+                style={eventsStyles.cardInfoIcon}
+              />
+              <REPText size={space.xs + 4} color={colors.grey} bold>
+                {Math.floor(
+                  ((event?.date || project?.date || Date.now()) - Date.now()) /
+                    (1000 * 60 * 60 * 24)
+                )}{' '}
+                days away
+              </REPText>
+            </View>
+          )}
         </View>
       }
     </View>

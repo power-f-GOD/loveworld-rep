@@ -17,14 +17,13 @@ export const Logo: FC<{
         <REPAnimate
           style={S.box}
           type='scale'
-          delay={100}
           duration={500}
           noAnimate={!animate}
           magnitude={1.5}
           loop={loopAnimation}>
-          <View style={[S.box, S.redBox]} />
-          <View style={[S.box, S.greenBox]} />
-          <View style={[S.box, S.blueBox]} />
+          <View style={[S.box, S.redBox, {}]} data-anim_delay={0} />
+          <View style={[S.box, S.greenBox]} data-anim_delay={125} />
+          <View style={[S.box, S.blueBox]} data-anim_delay={225} />
         </REPAnimate>
       </View>
 

@@ -1,4 +1,4 @@
-import React, { useState, FC } from 'react';
+import React, { useState, FC, useCallback } from 'react';
 import { View, ScrollView } from 'react-native';
 
 import {
@@ -21,6 +21,19 @@ export const _Login: FC<
   const [email, setEmail] = useState('' || userData.email);
   const [password, setPassword] = useState('' || userData.password);
 
+  const handleLoginPress = useCallback(() => {
+    if (email && password) {
+      return dispatch(triggerSignin({ email: email.toLowerCase(), password }));
+    }
+
+    dispatch(
+      displaySnackbar({
+        open: true,
+        message: 'Input email and password.'
+      })
+    );
+  }, [email, password]);
+
   return (
     <View style={authStyles.Auth}>
       <Logo />
@@ -34,14 +47,16 @@ export const _Login: FC<
         <REPTextInput
           label='Email'
           value={email}
+          autoCompleteType='email'
           style={{ marginTop: 50 }}
-          onChangeText={(email) => setEmail(email.toLowerCase())}
+          onChangeText={(email) => setEmail(email)}
         />
 
         <REPTextInput
           label='Password'
           value={password}
           secureTextEntry={true}
+          enablesReturnKeyAutomatically={true}
           style={{
             marginTop: 35
           }}
@@ -58,20 +73,7 @@ export const _Login: FC<
             Forgot Password?
           </REPLink> */}
 
-        <REPButton
-          style={authStyles.actionButton}
-          onPress={() => {
-            if (email && password) {
-              return dispatch(triggerSignin({ email, password }));
-            }
-
-            dispatch(
-              displaySnackbar({
-                open: true,
-                message: 'Input email and password.'
-              })
-            );
-          }}>
+        <REPButton style={authStyles.actionButton} onPress={handleLoginPress}>
           LOGIN
         </REPButton>
 

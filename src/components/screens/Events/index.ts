@@ -1,3 +1,3 @@
-export * from './Actions';
-export * from './Card';
-export * from './MainInfo';
+export * from '../__commons/Actions';
+export * from '../__commons/Card';
+export * from '../__commons/MainInfo';

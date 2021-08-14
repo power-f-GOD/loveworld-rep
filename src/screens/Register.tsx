@@ -53,7 +53,7 @@ const _Register: FC<
             .split(' ')
             .map((name) => name[0].toUpperCase() + name.slice(1))
             .join(' '),
-          email,
+          email: email.toLowerCase(),
           password,
           organization: org.id
         })

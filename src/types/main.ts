@@ -8,6 +8,13 @@ export interface EventDetailsHandler {
   ): () => void;
 }
 
+export interface ProjectDetailsHandler {
+  handleProjectDetailsPress?(
+    project: APIProjectsResponse[0],
+    imageSrc: ImageSourcePropType
+  ): () => void;
+}
+
 export type APIEventsResponse = Array<{
   _id: string;
   date: number;
@@ -48,4 +55,25 @@ export type APIEventsResponse = Array<{
     updated_at: string;
     __v: number;
   };
+}>;
+
+export type APIProjectsResponse = Array<{
+  _id: string;
+  date: number;
+  title: string;
+  details: string;
+  banner: string;
+  organization: {
+    officials: string[];
+    org_directory: string[];
+    _id: string;
+    admin: string;
+    office: string;
+    name: string;
+    __v: 0;
+  };
+  created_at: string;
+  updated_at: string;
+  __v: 0;
+  event: string;
 }>;

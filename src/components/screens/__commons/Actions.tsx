@@ -1,16 +1,22 @@
 import React, { FC, useCallback, memo, useState, useMemo } from 'react';
 import { View, ImageSourcePropType } from 'react-native';
 
-import { dispatch, displaySnackbar, displayActionSheet } from 'src/state';
+import {
+  dispatch,
+  displaySnackbar,
+  displayActionSheet,
+  displayModal
+} from 'src/state';
 import { eventsStyles, actionSheetOptionsStyles } from 'src/styles';
 import { REPText } from 'src/components';
 import { colors, space } from 'src/constants';
-import { APIEventsResponse } from 'src/types';
+import { APIEventsResponse, APIProjectsResponse } from 'src/types';
 import { Button, IconButton } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
 
 const _Actions: FC<{
   event?: APIEventsResponse[0];
+  project?: APIProjectsResponse[0];
   handleDisplayDetails?(): void;
   onDetailsScreen?: boolean;
   imageSrc?: ImageSourcePropType;
@@ -50,15 +56,25 @@ const _Actions: FC<{
 
     if (actions.love) return;
 
-    dispatch(
-      displaySnackbar({
-        open: true,
-        duration,
-        message:
-          'You love this event! ... (PS. This is a dummy and is still in development.) 😎'
-      })
-    );
-  }, [actions.love]);
+    if (event) {
+      dispatch(
+        displaySnackbar({
+          open: true,
+          duration,
+          message:
+            'You love this event! ... (PS. This is a dummy and is still in development.) 😎'
+        })
+      );
+    } else {
+      dispatch(
+        displayModal({
+          open: true,
+          title: 'Make a Pledge',
+          children: [<REPText key='0'>Coming soon!</REPText>]
+        })
+      );
+    }
+  }, [actions.love, event]);
 
   const handleAttendActionPress = useCallback(() => {
     setActions((prevActionsState) => ({
@@ -72,21 +88,24 @@ const _Actions: FC<{
       displaySnackbar({
         open: true,
         duration,
-        message:
-          'You will be attending this event! ... (PS. This is a dummy and is still under development.) 😎',
+        message: `${
+          event
+            ? 'You will be attending this event!'
+            : "Thank you for indicating to sponsor this project. You will be redirected to where you'll make payment (give)."
+        } ... (PS. This is a dummy and is still under development.) 😎'`,
         severity: 'success'
       })
     );
-  }, [actions.attend]);
+  }, [actions.attend, event]);
 
   const handlePartnerActionPress = useCallback(() => {
-    if (actions.partner) {
-      setActions((prevActionsState) => ({
-        ...prevActionsState,
-        partner: false
-      }));
-      return;
-    }
+    // if (actions.partner) {
+    //   setActions((prevActionsState) => ({
+    //     ...prevActionsState,
+    //     partner: false
+    //   }));
+    //   return;
+    // }
 
     const handlePartnershipTypePress = (
       partnershipType: 'pray' | 'give' | 'spread' | 'invite'
@@ -182,53 +201,91 @@ const _Actions: FC<{
 
   return (
     <View style={cardActionsStyle}>
-      <View style={eventsStyles.cardActionsButtonWrapper}>
-        <IconButton
-          icon={`heart${actions.love ? '' : '-outline'}`}
-          size={buttonSize}
-          animated
-          color={actions.love ? colors.green : colors.grey}
-          style={eventsStyles.cardActionsButton}
-          onPress={handleLoveActionPress}
-        />
-        <REPText
-          size={buttonLabelTextSize}
-          color={actions.love ? colors.green : colors.grey}>
-          5.1K
-        </REPText>
-      </View>
+      {event ? (
+        <>
+          <View style={eventsStyles.cardActionsButtonWrapper}>
+            <IconButton
+              icon={`heart${actions.love ? '' : '-outline'}`}
+              size={buttonSize}
+              animated
+              color={actions.love ? colors.green : colors.grey}
+              style={eventsStyles.cardActionsButton}
+              onPress={handleLoveActionPress}
+            />
+            <REPText
+              size={buttonLabelTextSize}
+              color={actions.love ? colors.green : colors.grey}>
+              5.1K
+            </REPText>
+          </View>
 
-      <View style={eventsStyles.cardActionsButtonWrapper}>
-        <IconButton
-          icon={`account-check${actions.attend ? '' : '-outline'}`}
-          size={buttonSize}
-          animated
-          color={actions.attend ? colors.green : colors.grey}
-          style={eventsStyles.cardActionsButton}
-          onPress={handleAttendActionPress}
-        />
-        <REPText
-          size={buttonLabelTextSize}
-          color={actions.attend ? colors.green : colors.grey}>
-          2K
-        </REPText>
-      </View>
+          <View style={eventsStyles.cardActionsButtonWrapper}>
+            <IconButton
+              icon={`account-check${actions.attend ? '' : '-outline'}`}
+              size={buttonSize}
+              animated
+              color={actions.attend ? colors.green : colors.grey}
+              style={eventsStyles.cardActionsButton}
+              onPress={handleAttendActionPress}
+            />
+            <REPText
+              size={buttonLabelTextSize}
+              color={actions.attend ? colors.green : colors.grey}>
+              2K
+            </REPText>
+          </View>
 
-      <View style={eventsStyles.cardActionsButtonWrapper}>
-        <IconButton
-          icon='hand'
-          size={buttonSize}
-          animated
-          color={actions.partner ? colors.green : colors.grey}
-          style={eventsStyles.cardActionsButton}
-          onPress={handlePartnerActionPress}
-        />
-        <REPText
-          size={buttonLabelTextSize}
-          color={actions.partner ? colors.green : colors.grey}>
-          10K
-        </REPText>
-      </View>
+          <View style={eventsStyles.cardActionsButtonWrapper}>
+            <IconButton
+              icon='hand'
+              size={buttonSize}
+              animated
+              color={actions.partner ? colors.green : colors.grey}
+              style={eventsStyles.cardActionsButton}
+              onPress={handlePartnerActionPress}
+            />
+            <REPText
+              size={buttonLabelTextSize}
+              color={actions.partner ? colors.green : colors.grey}>
+              10K
+            </REPText>
+          </View>
+        </>
+      ) : (
+        <>
+          <View style={eventsStyles.cardActionsButtonWrapper}>
+            <IconButton
+              icon='hand-left'
+              size={buttonSize}
+              animated
+              color={actions.love ? colors.purple : colors.grey}
+              style={eventsStyles.cardActionsButton}
+              onPress={handleLoveActionPress}
+            />
+            <REPText
+              size={buttonLabelTextSize}
+              color={actions.love ? colors.purple : colors.grey}>
+              5.1K
+            </REPText>
+          </View>
+
+          <View style={eventsStyles.cardActionsButtonWrapper}>
+            <IconButton
+              icon='cash'
+              size={buttonSize}
+              animated
+              color={actions.attend ? colors.purple : colors.grey}
+              style={eventsStyles.cardActionsButton}
+              onPress={handleAttendActionPress}
+            />
+            <REPText
+              size={buttonLabelTextSize}
+              color={actions.attend ? colors.purple : colors.grey}>
+              2K
+            </REPText>
+          </View>
+        </>
+      )}
 
       <View
         style={{

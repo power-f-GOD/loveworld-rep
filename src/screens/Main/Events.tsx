@@ -3,7 +3,8 @@ import {
   Image,
   FlatList,
   ListRenderItemInfo,
-  ImageSourcePropType
+  ImageSourcePropType,
+  View
 } from 'react-native';
 import { connect } from 'react-redux';
 
@@ -76,6 +77,7 @@ const _Events: FC<
             : 'No events at the moment.'}
         </REPText>
       )}
+
       <FlatList
         data={eventsData}
         renderItem={handleRenderEvents}

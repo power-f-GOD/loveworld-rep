@@ -11,7 +11,12 @@ import { createMaterialBottomTabNavigator } from '@react-navigation/material-bot
 import MaterialIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { connect } from 'react-redux';
 import { useAnimationState, MotiView } from 'moti';
-import { TouchableNativeFeedback, View, StyleSheet } from 'react-native';
+import {
+  TouchableNativeFeedback,
+  View,
+  StyleSheet,
+  StatusBar
+} from 'react-native';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 
 import { Dashboard } from './Dashboard';
@@ -106,6 +111,13 @@ const _Main: FC<REPStackScreenProps<'Main'> & { userData: UserData }> = ({
 
   return (
     <>
+      <StatusBar
+        animated={true}
+        backgroundColor={currentTabIsDash ? colors.white : barColor}
+        translucent={true}
+        barStyle={currentTabIsDash ? 'dark-content' : 'light-content'}
+        showHideTransition='slide'
+      />
       <Appbar.Header style={{ marginTop: 0, backgroundColor: colors.white }}>
         <Appbar.Content
           title={

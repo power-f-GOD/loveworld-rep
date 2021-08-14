@@ -2,22 +2,34 @@ import React, { FC, useEffect } from 'react';
 import { View, ScrollView, StyleSheet } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
-import { dispatch, fetchEvents } from 'src/state';
+import { dispatch, fetchEvents, fetchProjects } from 'src/state';
 import { mainStyles } from 'src/styles';
 import { fonts, colors, space } from 'src/constants';
 import { REPText, REPAnimate } from 'src/components';
 import { connect } from 'react-redux';
-import { UserData, FetchState, APIEventsResponse } from 'src/types';
+import {
+  UserData,
+  FetchState,
+  APIEventsResponse,
+  APIProjectsResponse
+} from 'src/types';
 
-const _Dashboard: FC<{ userData: UserData; numEvents: number }> = ({
-  userData,
-  numEvents
-}) => {
+const _Dashboard: FC<{
+  userData: UserData;
+  numEvents: number;
+  numProjects: number;
+}> = ({ userData, numEvents, numProjects }) => {
   useEffect(() => {
     if (!numEvents) {
       dispatch(fetchEvents());
     }
   }, [numEvents]);
+
+  useEffect(() => {
+    if (!numProjects) {
+      dispatch(fetchProjects());
+    }
+  }, [numProjects]);
 
   return (
     <ScrollView style={mainStyles.Tab}>
@@ -50,16 +62,13 @@ const _Dashboard: FC<{ userData: UserData; numEvents: number }> = ({
                 opacity: 0.85
               }}>
               <REPText
-                lineHeight={space.xs * 2}
+                lineHeight={space.xs * 2.5}
                 size={14}
                 color={colors.white}
                 bold>
                 Records
               </REPText>
-              <REPText
-                lineHeight={space.xs * 1.5}
-                size={12}
-                color={colors.white}>
+              <REPText lineHeight={space.xs * 2} size={12} color={colors.white}>
                 set
               </REPText>
             </View>
@@ -97,16 +106,13 @@ const _Dashboard: FC<{ userData: UserData; numEvents: number }> = ({
                 opacity: 0.85
               }}>
               <REPText
-                lineHeight={space.xs * 2}
+                lineHeight={space.xs * 2.5}
                 size={14}
                 color={colors.white}
                 bold>
                 Events
               </REPText>
-              <REPText
-                lineHeight={space.xs * 1.5}
-                size={12}
-                color={colors.white}>
+              <REPText lineHeight={space.xs * 2} size={12} color={colors.white}>
                 upcoming
               </REPText>
             </View>
@@ -127,7 +133,7 @@ const _Dashboard: FC<{ userData: UserData; numEvents: number }> = ({
               size={fonts.h1.fontSize + 5}
               color={colors.white}
               bold>
-              0
+              {numProjects}
             </REPText>
             <View
               style={{
@@ -137,16 +143,13 @@ const _Dashboard: FC<{ userData: UserData; numEvents: number }> = ({
                 opacity: 0.85
               }}>
               <REPText
-                lineHeight={space.xs * 2}
+                lineHeight={space.xs * 2.5}
                 size={14}
                 color={colors.white}
                 bold>
                 Projects
               </REPText>
-              <REPText
-                lineHeight={space.xs * 1.5}
-                size={12}
-                color={colors.white}>
+              <REPText lineHeight={space.xs * 2} size={12} color={colors.white}>
                 pending
               </REPText>
             </View>
@@ -188,10 +191,15 @@ const _Dashboard: FC<{ userData: UserData; numEvents: number }> = ({
 };
 
 export const Dashboard = connect(
-  (state: { userData: UserData; events: FetchState<APIEventsResponse> }) =>
+  (state: {
+    userData: UserData;
+    events: FetchState<APIEventsResponse>;
+    projects: FetchState<APIProjectsResponse>;
+  }) =>
     ({
       userData: state.userData,
-      numEvents: state.events.data?.length
+      numEvents: state.events.data?.length,
+      numProjects: state.projects.data?.length
     } as any)
 )(_Dashboard);
 
