@@ -79,7 +79,6 @@ const _App: FC<{
                     component={Login}
                     options={{
                       headerShown: false
-
                       // animation: 'slide_from_left',
                     }}
                   />

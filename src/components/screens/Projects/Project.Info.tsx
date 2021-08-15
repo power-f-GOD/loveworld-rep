@@ -4,9 +4,10 @@ import MaterialIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
 import { eventsStyles } from 'src/styles';
-import { REPText } from '../../shared';
+import { REPText } from 'src/components/shared';
 import { fonts, space, colors } from 'src/constants';
 import { APIProjectsResponse } from 'src/types';
+import { getDaysLeft } from 'src/utils';
 
 export const _ProjectInfo: FC<{
   project: APIProjectsResponse[0];
@@ -14,6 +15,7 @@ export const _ProjectInfo: FC<{
   style?: StyleProp<ViewStyle>;
   handleDisplayDetails?(): void;
 }> = ({ project, renderPartial, style, handleDisplayDetails }) => {
+  const daysLeft = getDaysLeft(project.date);
   const completion = Math.floor(Math.random() * 101);
   let completionColor = 'purple';
 
@@ -52,15 +54,36 @@ export const _ProjectInfo: FC<{
         </TouchableOpacity>
       )}
 
-      <View style={{ flexDirection: 'row' }}>
-        <MaterialIcons
-          name='account-circle'
-          color={colors.grey}
-          style={eventsStyles.cardInfoIcon}
-        />
-        <REPText size={space.xs + 4} color={colors.grey}>
-          {project.organization.name}
-        </REPText>
+      <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
+        <View style={{ flexDirection: 'row' }}>
+          <MaterialIcons
+            name='account-circle'
+            color={colors.grey}
+            style={eventsStyles.cardInfoIcon}
+          />
+          <REPText size={space.xs + 4} color={colors.grey} me={space.md}>
+            {project.organization.name}
+          </REPText>
+        </View>
+
+        {!renderPartial && (
+          <View style={{ flexDirection: 'row' }}>
+            <MaterialIcons
+              name='timer-sand'
+              color={colors.grey}
+              style={eventsStyles.cardInfoIcon}
+            />
+            <REPText size={space.xs + 4} color={colors.grey} bold>
+              {daysLeft >= 1 ? (
+                <>
+                  due in {daysLeft} day{daysLeft === 1 ? '' : 's'}
+                </>
+              ) : (
+                <>due</>
+              )}
+            </REPText>
+          </View>
+        )}
       </View>
 
       <View>

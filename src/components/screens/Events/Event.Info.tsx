@@ -7,6 +7,7 @@ import { REPText } from 'src/components';
 import { fonts, space, colors } from 'src/constants';
 import { APIEventsResponse, APIProjectsResponse } from 'src/types';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import { getDaysLeft } from 'src/utils';
 
 export const _EventInfo: FC<{
   event: APIEventsResponse[0];
@@ -14,6 +15,8 @@ export const _EventInfo: FC<{
   style?: StyleProp<ViewStyle>;
   handleDisplayDetails?(): void;
 }> = ({ event, renderPartial, style, handleDisplayDetails }) => {
+  const daysLeft = getDaysLeft(event.date);
+
   return (
     <View style={style}>
       {renderPartial && (
@@ -75,22 +78,28 @@ export const _EventInfo: FC<{
             </>
           )}
 
-          {event && (
-            <View style={{ flexDirection: 'row' }}>
-              <MaterialIcons
-                name='timer-sand'
-                color={colors.grey}
-                style={eventsStyles.cardInfoIcon}
-              />
-              <REPText size={space.xs + 4} color={colors.grey} bold>
-                {Math.floor(
-                  ((event.date || Date.now()) - Date.now()) /
-                    (1000 * 60 * 60 * 24)
-                )}{' '}
-                days away
-              </REPText>
-            </View>
-          )}
+          <View style={{ flexDirection: 'row' }}>
+            <MaterialIcons
+              name='timer-sand'
+              color={colors.grey}
+              style={eventsStyles.cardInfoIcon}
+            />
+
+            <REPText size={space.xs + 4} color={colors.grey} bold>
+              {daysLeft >= 1 ? (
+                <>
+                  {daysLeft === 1 ? 'a' : daysLeft} day
+                  {daysLeft === 1 ? '' : 's'} away
+                </>
+              ) : (
+                <>
+                  {daysLeft === 0
+                    ? 'today'
+                    : 'happened on ' + new Date(event.date).toDateString()}
+                </>
+              )}
+            </REPText>
+          </View>
         </View>
       }
     </View>

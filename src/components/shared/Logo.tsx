@@ -21,9 +21,9 @@ export const Logo: FC<{
           noAnimate={!animate}
           magnitude={1.5}
           loop={loopAnimation}>
-          <View style={[S.box, S.redBox, {}]} data-anim_delay={0} />
-          <View style={[S.box, S.greenBox]} data-anim_delay={125} />
-          <View style={[S.box, S.blueBox]} data-anim_delay={225} />
+          <View style={[S.box, S.redBox, {}]} data-anim_delay={150} />
+          <View style={[S.box, S.greenBox]} data-anim_delay={300} />
+          <View style={[S.box, S.blueBox]} data-anim_delay={450} />
         </REPAnimate>
       </View>
 

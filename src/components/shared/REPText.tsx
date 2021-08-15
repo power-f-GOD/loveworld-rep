@@ -18,6 +18,7 @@ export const REPText: FC<{
   alignment?: 'left' | 'center' | 'right';
   lineHeight?: number;
   color?: string;
+  italic?: boolean;
   margin?: number;
   my?: number;
   mx?: number;
@@ -39,7 +40,8 @@ export const REPText: FC<{
   size,
   alignment,
   lineHeight,
-  children
+  children,
+  italic
 }) => {
   let style = {};
 
@@ -60,6 +62,7 @@ export const REPText: FC<{
             fontFamily: bold ? fonts.bold : fonts.regular,
             fontSize: size || 14,
             color: color || colors.black,
+            fontStyle: italic ? 'italic' : 'normal',
             ...(lineHeight ? { lineHeight } : {}),
             ...(alignment ? { textAlign: alignment } : {}),
             ...(margin !== undefined ? { margin } : {}),

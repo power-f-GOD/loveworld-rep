@@ -83,6 +83,12 @@ const _EventDetails: FC<{
         <REPText size={space.xs + 4} my={space.sm} color={colors.grey}>
           Comments will appear below...
         </REPText>
+
+        <REPText size={space.xs + 4} my={space.sm} color={colors.grey} italic>
+          PS. Kindly, note that some of the data currently on the app are dummy
+          and their features are not totally functional yet. We're still in
+          development.
+        </REPText>
       </REPAnimate>
     </View>
   );

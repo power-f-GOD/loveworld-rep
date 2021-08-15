@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useCallback, useMemo } from 'react';
+import React, { FC, useEffect, useCallback, useMemo, memo } from 'react';
 import { FAB, Button } from 'react-native-paper';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 import { connect } from 'react-redux';
@@ -18,6 +18,10 @@ const _REPFAB: FC<{
   is_admin: boolean;
   currentTab: keyof MainStackParamList;
 }> = ({ barColor, currentTabIsDash, is_admin, currentTab }) => {
+  const canActivateFAB = !(
+    currentTabIsDash ||
+    (!is_admin && currentTab !== 'Records')
+  );
   const FABAnimState = useAnimationState({
     from: {
       opacity: 0,
@@ -97,20 +101,20 @@ const _REPFAB: FC<{
   }, []);
 
   useEffect(() => {
-    FABAnimState.transitionTo(
-      currentTabIsDash || (!is_admin && currentTab !== 'Records')
-        ? 'from'
-        : 'to'
-    );
-  }, [currentTab, currentTabIsDash, is_admin]);
+    FABAnimState.transitionTo(canActivateFAB ? 'to' : 'from');
+  }, [canActivateFAB]);
 
   return (
     <MotiView
       state={FABAnimState}
-      pointerEvents={currentTabIsDash ? 'none' : undefined}
+      pointerEvents={canActivateFAB ? undefined : 'none'}
       style={S.FABWrapper}
       transition={FABTransition as any}>
-      <FAB style={FABStyle} icon='plus' onPress={handleFABPress} />
+      <FAB
+        style={FABStyle}
+        icon='plus'
+        onPress={canActivateFAB ? handleFABPress : undefined}
+      />
     </MotiView>
   );
 };
@@ -124,6 +128,4 @@ const S = StyleSheet.create({
   }
 });
 
-export const REPFAB = connect(() => ({
-  // userData: state.userData
-}))(_REPFAB);
+export const REPFAB = memo(_REPFAB);

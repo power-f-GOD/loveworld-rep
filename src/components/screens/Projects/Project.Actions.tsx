@@ -125,7 +125,7 @@ const _ProjectActions: FC<{
         <REPText size={buttonLabelTextSize}>57</REPText>
       </View>
 
-      {!onDetailsScreen && (
+      {/* {!onDetailsScreen && (
         <IconButton
           icon='information-outline'
           size={buttonSize}
@@ -134,7 +134,7 @@ const _ProjectActions: FC<{
           style={eventsStyles.cardActionsButton}
           onPress={handleDisplayDetails}
         />
-      )}
+      )} */}
     </View>
   );
 };
