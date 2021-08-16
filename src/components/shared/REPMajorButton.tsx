@@ -1,4 +1,4 @@
-import React, { FC, memo } from 'react';
+import React, { FC, memo, useMemo } from 'react';
 import {
   StyleProp,
   ViewStyle,
@@ -6,7 +6,6 @@ import {
   StyleSheet,
   TouchableNativeFeedback
 } from 'react-native';
-import { Button } from 'react-native-paper';
 
 import { colors, space } from 'src/constants';
 import { REPText } from './REPText';
@@ -17,16 +16,19 @@ export const REPButton: FC<{
 }> = ({ style, onPress, children }) => {
   return (
     <TouchableNativeFeedback onPress={onPress}>
-      <View style={[S.wrapper, style || {}]}>
+      <View style={useMemo(() => [S.wrapper, style || {}], [])}>
         <REPText
-          style={{ marginTop: space.xs + 2, alignSelf: 'center' }}
+          style={useMemo(
+            () => ({ marginTop: space.xs + 2, alignSelf: 'center' }),
+            []
+          )}
           color={colors.white}>
           {children}
         </REPText>
         <View style={S.rectGrid}>
-          <View style={[S.rect, S.rect1]}></View>
-          <View style={[S.rect, S.rect2]}></View>
-          <View style={[S.rect, S.rect3]}></View>
+          <View style={useMemo(() => [S.rect, S.rect1], [])}></View>
+          <View style={useMemo(() => [S.rect, S.rect2], [])}></View>
+          <View style={useMemo(() => [S.rect, S.rect3], [])}></View>
         </View>
       </View>
     </TouchableNativeFeedback>

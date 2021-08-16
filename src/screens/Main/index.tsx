@@ -1,51 +1,33 @@
-import React, {
-  FC,
-  useState,
-  useEffect,
-  useRef,
-  useCallback,
-  useMemo
-} from 'react';
-import { Appbar, FAB, Menu, Button } from 'react-native-paper';
-import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
+import React, { FC, useState, useEffect, useCallback, useMemo } from 'react';
+import { Appbar, Menu } from 'react-native-paper';
 import MaterialIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { connect } from 'react-redux';
-import { useAnimationState, MotiView } from 'moti';
-import {
-  TouchableNativeFeedback,
-  View,
-  StyleSheet,
-  StatusBar
-} from 'react-native';
+import { useAnimationState } from 'moti';
+import { StatusBar } from 'react-native';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 
 import { Dashboard } from './Dashboard';
 import { MainStackParamList, REPStackScreenProps, UserData } from 'src/types';
 import { Records } from './Records';
 import { Projects } from './Projects';
-import { Logo, REPText, REPAnimate, REPFAB } from 'src/components';
+import { Logo, REPText, REPFAB } from 'src/components';
 import { colors, space, fonts } from 'src/constants';
-import {
-  dispatch,
-  displayModal,
-  triggerSignout,
-  displayActionSheet
-} from 'src/state';
+import { dispatch, triggerSignout } from 'src/state';
 import { Events } from './Events';
 
 const Tab = createMaterialTopTabNavigator(); // createMaterialBottomTabNavigator();
+let currentTab: keyof MainStackParamList = 'Dashboard';
 
 const _Main: FC<REPStackScreenProps<'Main'> & { userData: UserData }> = ({
-  userData,
-  navigation
+  userData
 }) => {
-  const [currentTab, setCurrentTab] = useState<keyof MainStackParamList>(
-    'Dashboard'
-  );
-  const currentTabIsDash = currentTab === 'Dashboard';
   const is_admin = userData.is_admin;
   let barColor = colors.black;
+  // const [currentTab, setCurrentTab] = useState<keyof MainStackParamList>(
+  //   'Dashboard'
+  // );
   const [openMenu, setOpenMenu] = useState(false);
+  const currentTabIsDash = currentTab === 'Dashboard';
   const FABAnimState = useAnimationState({
     from: {
       opacity: 0,
@@ -58,8 +40,18 @@ const _Main: FC<REPStackScreenProps<'Main'> & { userData: UserData }> = ({
   });
   const screenListeners = useMemo(() => {
     return {
+      tabPress: (e: any) => {
+        // console.log('FOCUSED');
+        // setTimeout(
+        //   () =>
+        //     setCurrentTab(
+        currentTab = e.target.split('-')[0] || 0;
+        // ),
+        // 0
+        // );
+      },
       focus: (e: any) => {
-        setTimeout(() => setCurrentTab(e.target.split('-')[0] || 0), 0);
+        currentTab = e.target.split('-')[0] || 0;
       }
     };
   }, []);
@@ -93,7 +85,7 @@ const _Main: FC<REPStackScreenProps<'Main'> & { userData: UserData }> = ({
         ? 'from'
         : 'to'
     );
-  }, [currentTab, currentTabIsDash, is_admin]);
+  }, [currentTabIsDash, is_admin]);
 
   switch (currentTab) {
     case 'Records':
@@ -118,18 +110,25 @@ const _Main: FC<REPStackScreenProps<'Main'> & { userData: UserData }> = ({
         barStyle={currentTabIsDash ? 'dark-content' : 'light-content'}
         showHideTransition='slide'
       />
-      <Appbar.Header style={{ marginTop: 0, backgroundColor: colors.white }}>
+      <Appbar.Header
+        style={useMemo(
+          () => ({ marginTop: 0, backgroundColor: colors.white }),
+          []
+        )}>
         <Appbar.Content
           title={
             <Logo
-              style={{
-                transform: [{ scale: 0.6 }, { translateX: -10 }],
-                marginLeft: 0
-              }}
+              style={useMemo(
+                () => ({
+                  transform: [{ scale: 0.6 }, { translateX: -10 }],
+                  marginLeft: 0
+                }),
+                []
+              )}
               currentTab={currentTab}
             />
           }
-          style={{ paddingStart: 0 }}
+          style={useMemo(() => ({ paddingStart: 0 }), [])}
         />
         {/* <Appbar.Action icon="magnify" onPress={() => {}} /> */}
         {is_admin && (
@@ -140,18 +139,18 @@ const _Main: FC<REPStackScreenProps<'Main'> & { userData: UserData }> = ({
 
         <Menu
           visible={openMenu}
-          style={{ marginTop: space.md }}
-          onDismiss={() => setOpenMenu(false)}
+          style={useMemo(() => ({ marginTop: space.md }), [])}
+          onDismiss={useCallback(() => setOpenMenu(false), [])}
           anchor={
             <Appbar.Action
               icon='account-circle'
-              onPress={() => setOpenMenu(true)}
+              onPress={useCallback(() => setOpenMenu(true), [])}
             />
           }>
           {/* <Menu.Item onPress={() => {}} title='Item 2' /> */}
           {/* <Divider /> */}
           <Menu.Item
-            onPress={() => dispatch(triggerSignout())}
+            onPress={useCallback(() => dispatch(triggerSignout()), [])}
             title='Log out'
             icon='logout'
           />
@@ -159,31 +158,32 @@ const _Main: FC<REPStackScreenProps<'Main'> & { userData: UserData }> = ({
       </Appbar.Header>
 
       <Tab.Navigator
-        barStyle={{ backgroundColor: barColor }}
+        barStyle={useMemo(() => ({ backgroundColor: colors.white }), [])}
         tabBarPosition='bottom'
         // initialRouteName='Events'
-        screenOptions={{
-          tabBarStyle: { backgroundColor: barColor },
-          tabBarItemStyle: {
-            maxHeight: 65,
-            paddingTop: space.xs * 0.75,
-            paddingBottom: 0
-          },
-          tabBarLabelStyle: {
-            fontSize: 10,
-            textTransform: 'capitalize',
-            fontFamily: fonts.regular
-          },
-          tabBarIndicatorStyle: {
-            backgroundColor: currentTabIsDash ? colors.black : colors.white
-          },
-          tabBarPressColor: colors.white,
-          tabBarBounces: true,
-          tabBarInactiveTintColor: currentTabIsDash
-            ? 'rgba(0, 0, 0, 0.35)'
-            : 'rgba(255, 255, 255, 0.5)',
-          tabBarActiveTintColor: currentTabIsDash ? colors.black : colors.white
-        }}>
+        screenOptions={useMemo(
+          () => ({
+            tabBarItemStyle: {
+              maxHeight: 65,
+              paddingTop: space.xs * 0.75,
+              paddingBottom: 0
+            },
+            tabBarLabelStyle: {
+              fontSize: 10,
+              textTransform: 'capitalize',
+              fontFamily: fonts.regular
+            },
+            tabBarIndicatorStyle: {
+              backgroundColor: currentTabIsDash ? colors.black : colors.white
+            },
+            tabBarPressColor: colors.white,
+            tabBarBounces: true,
+            tabBarInactiveTintColor: 'rgba(0, 0, 0, 0.3)',
+            tabBarActiveTintColor: currentTabIsDash ? colors.black : barColor,
+            lazy: true
+          }),
+          [currentTabIsDash, barColor]
+        )}>
         <Tab.Screen
           name='Dashboard'
           component={Dashboard}
@@ -219,15 +219,6 @@ const _Main: FC<REPStackScreenProps<'Main'> & { userData: UserData }> = ({
     </>
   );
 };
-
-const S = StyleSheet.create({
-  FABWrapper: {
-    position: 'absolute',
-    margin: 16,
-    right: 0,
-    bottom: 50
-  }
-});
 
 export const Main = connect((state: { userData: UserData }) => ({
   userData: state.userData

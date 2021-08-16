@@ -1,10 +1,8 @@
 import 'react-native-gesture-handler';
 import { NavigationContainer } from '@react-navigation/native';
-import { createSharedElementStackNavigator } from 'react-navigation-shared-element';
-import React, { FC, useEffect } from 'react';
+import React, { FC, useEffect, useMemo } from 'react';
 // import { StyleSheet, Platform, StatusBar, View } from 'react-native';
 import { connect } from 'react-redux';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { enableScreens } from 'react-native-screens';
 import {
   TransitionPresets,
@@ -17,7 +15,7 @@ import { Login, Splash, Register, Main } from 'src/screens';
 import { dispatch } from 'src/state/store';
 import { verifyAuth } from 'src/state/actions';
 import { REPModal, REPSnackbar, REPActionSheet } from './components';
-import { colors, fontFamily, fonts, space } from './constants';
+import { colors, fonts, space } from './constants';
 import { EventDetails } from './screens/Event.Details';
 import { EventInvite } from './screens/Event.Invite';
 import { ProjectDetails } from './screens/Project.Details';
@@ -53,13 +51,14 @@ const _App: FC<{
           initialRouteName={
             snackbarMessage?.includes('Register') ? 'Register' : undefined
           }
-          screenOptions={
-            {
+          screenOptions={useMemo(
+            () => ({
               // gestureEnabled: false
               // cardOverlayEnabled: true,
               // cardStyle: { backgroundColor: 'transparent' }
-            }
-          }>
+            }),
+            []
+          )}>
           {(() => {
             if (authStatus === 'pending' && !authErr) {
               return (
@@ -203,9 +202,8 @@ const _App: FC<{
 };
 
 export default connect(
-  (state: { auth: AuthProps; snackbar: REPSnackbarProps }) =>
-    ({
-      auth: state.auth,
-      snackbarMessage: state.snackbar.message
-    } as any)
+  (state: { auth: AuthProps; snackbar: REPSnackbarProps }) => ({
+    auth: state.auth,
+    snackbarMessage: state.snackbar.message || ''
+  })
 )(_App);

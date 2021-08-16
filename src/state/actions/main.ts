@@ -1,26 +1,11 @@
-import * as SecureStore from 'expo-secure-store';
 import {
-  USER_AUTHENTICATE,
-  USER_SIGNIN,
-  USER_SIGNOUT,
-  ORGANIZATIONS_FETCH
-} from 'src/constants';
-import {
-  AuthProps,
   ActionProps,
-  HttpStatusProps,
-  APIBaseResponse,
-  APIAuthResponse,
-  SigninProps,
-  RegisterProps,
-  APIOrgQueryResponse,
   FetchState,
-  UserData,
   APIEventsResponse,
   APIProjectsResponse
 } from 'src/types';
 import { Http, logHttpError } from 'src/utils';
-import { displaySnackbar, setUserData } from './app';
+import { displaySnackbar } from './app';
 import { EVENTS_FETCH, PROJECTS_FETCH } from 'src/constants/main';
 
 export const fetchEvents = () => (dispatch: (arg: any) => {}) => {

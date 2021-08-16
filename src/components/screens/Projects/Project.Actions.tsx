@@ -110,10 +110,13 @@ const _ProjectActions: FC<{
       </View>
 
       <View
-        style={{
-          ...eventsStyles.cardActionsButtonWrapper,
-          marginLeft: 'auto'
-        }}>
+        style={useMemo(
+          () => ({
+            ...eventsStyles.cardActionsButtonWrapper,
+            marginLeft: 'auto'
+          }),
+          []
+        )}>
         <IconButton
           icon='comment-text-outline'
           size={buttonSize}

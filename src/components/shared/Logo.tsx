@@ -1,5 +1,5 @@
-import React, { FC } from 'react';
-import { View, Text, StyleSheet, ViewStyle, StyleProp } from 'react-native';
+import React, { FC, useMemo } from 'react';
+import { View, StyleSheet, ViewStyle, StyleProp } from 'react-native';
 import { colors, fonts, space } from 'src/constants';
 import { REPAnimate } from './REPAnimate';
 import { MainStackParamList } from 'src/types';
@@ -12,7 +12,7 @@ export const Logo: FC<{
   currentTab?: keyof MainStackParamList;
 }> = ({ style, animate, currentTab, loopAnimation }) => {
   return (
-    <View style={[S.Logo, style ? style : {}]}>
+    <View style={useMemo(() => [S.Logo, style ? style : {}], [])}>
       <View style={S.boxGrid}>
         <REPAnimate
           style={S.box}
@@ -21,24 +21,35 @@ export const Logo: FC<{
           noAnimate={!animate}
           magnitude={1.5}
           loop={loopAnimation}>
-          <View style={[S.box, S.redBox, {}]} data-anim_delay={150} />
-          <View style={[S.box, S.greenBox]} data-anim_delay={300} />
-          <View style={[S.box, S.blueBox]} data-anim_delay={450} />
+          <View
+            style={useMemo(() => [S.box, S.redBox], [])}
+            data-anim_delay={150}
+          />
+          <View
+            style={useMemo(() => [S.box, S.greenBox], [])}
+            data-anim_delay={300}
+          />
+          <View
+            style={useMemo(() => [S.box, S.blueBox], [])}
+            data-anim_delay={450}
+          />
         </REPAnimate>
       </View>
 
       <View
-        style={
-          currentTab && currentTab !== 'Dashboard'
-            ? {
-                transform: [
-                  { scale: 0.75 },
-                  { translateX: -space.sm - 2 },
-                  { translateY: -space.xs }
-                ]
-              }
-            : undefined
-        }>
+        style={useMemo(
+          () =>
+            currentTab && currentTab !== 'Dashboard'
+              ? {
+                  transform: [
+                    { scale: 0.75 },
+                    { translateX: -space.sm - 2 },
+                    { translateY: -space.xs }
+                  ]
+                }
+              : undefined,
+          [currentTab]
+        )}>
         <REPAnimate
           noAnimate={!animate}
           direction='x'

@@ -39,10 +39,10 @@ const _EventCard: FC<{
                 : 'Emmanuel Sunday'}
             </REPText>
             {i === 0
-              ? 'partnered in giving'
+              ? ' partnered in giving'
               : i === 1
-              ? 'partners in prayer'
-              : 'will be attending'}
+              ? ' partners in prayer'
+              : ' will be attending'}
           </REPText>
         </View>
       )}

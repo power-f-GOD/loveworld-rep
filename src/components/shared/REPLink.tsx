@@ -1,17 +1,7 @@
-import React, { FC, memo } from 'react';
-import {
-  StyleProp,
-  ViewStyle,
-  View,
-  StyleSheet,
-  Text,
-  TextStyle,
-  TouchableOpacity
-} from 'react-native';
-import { Button } from 'react-native-paper';
+import React, { FC, useMemo } from 'react';
+import { StyleProp, Text, TextStyle, TouchableOpacity } from 'react-native';
 
-import { colors, fontFamily, fonts } from 'src/constants';
-import { REPText } from './';
+import { colors, fonts } from 'src/constants';
 
 export const REPLink: FC<{
   style?: StyleProp<TextStyle>;
@@ -23,14 +13,17 @@ export const REPLink: FC<{
   return (
     <TouchableOpacity onPress={onPress}>
       <Text
-        style={[
-          style || {},
-          {
-            fontFamily: bold ? fonts.bold : fonts.regular,
-            fontSize: size || 14,
-            color: color || colors.black
-          }
-        ]}>
+        style={useMemo(
+          () => [
+            style || {},
+            {
+              fontFamily: bold ? fonts.bold : fonts.regular,
+              fontSize: size || 14,
+              color: color || colors.black
+            }
+          ],
+          [color]
+        )}>
         {children}
       </Text>
     </TouchableOpacity>

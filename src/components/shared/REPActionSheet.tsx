@@ -1,15 +1,11 @@
 import 'react-native-gesture-handler';
 import React, { FC, useRef, useEffect, useMemo, useCallback } from 'react';
 import { connect } from 'react-redux';
-import {
-  ActionSheetCustom as ActionSheet,
-  ActionSheetCustomProps
-} from '@alessiocancian/react-native-actionsheet';
+import { ActionSheetCustom as ActionSheet } from '@alessiocancian/react-native-actionsheet';
 
 import { REPActionSheetProps } from 'src/types';
 import { dispatch } from 'src/state/store';
-import { displaySnackbar, displayActionSheet } from 'src/state/actions';
-import { colors } from 'src/constants';
+import { displayActionSheet } from 'src/state/actions';
 import { actionSheetOptionsStyles } from 'src/styles';
 
 const _REPActionSheet: FC<{
@@ -17,23 +13,6 @@ const _REPActionSheet: FC<{
 }> = ({ actionSheet }) => {
   const { open, title, options, cancelIndex, destructiveIndex } = actionSheet;
   const actionSheetRef = useRef<ActionSheet | null>(null);
-  const customStyles = useMemo(() => {
-    return {
-      cancelButtonBox: {
-        height: cancelIndex! > -1 ? 57 : 0
-      },
-      titleBox: {
-        ...actionSheetOptionsStyles.titleBox
-      },
-      buttonBox: {
-        borderWidth: 0
-      }
-    };
-  }, [cancelIndex]);
-
-  const handleOnPress = useCallback(() => {
-    dispatch(displayActionSheet({ open: false }));
-  }, []);
 
   useEffect(() => {
     if (actionSheetRef.current) {
@@ -47,13 +26,27 @@ const _REPActionSheet: FC<{
 
   return (
     <ActionSheet
-      ref={(ref) => (actionSheetRef.current = ref)}
+      ref={useCallback((ref) => (actionSheetRef.current = ref), [])}
       title={title || ''}
-      options={options || []}
+      options={useMemo(() => options || [], [options])}
       cancelButtonIndex={cancelIndex}
       destructiveButtonIndex={destructiveIndex}
-      styles={customStyles}
-      onPress={handleOnPress}
+      styles={useMemo(() => {
+        return {
+          cancelButtonBox: {
+            height: cancelIndex! > -1 ? 57 : 0
+          },
+          titleBox: {
+            ...actionSheetOptionsStyles.titleBox
+          },
+          buttonBox: {
+            borderWidth: 0
+          }
+        };
+      }, [cancelIndex])}
+      onPress={useCallback(() => {
+        dispatch(displayActionSheet({ open: false }));
+      }, [])}
     />
   );
 };

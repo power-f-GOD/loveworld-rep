@@ -1,11 +1,11 @@
-import React, { FC, memo } from 'react';
+import React, { FC, memo, useMemo } from 'react';
 import { View, StyleProp, ViewStyle } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import { eventsStyles } from 'src/styles';
 import { REPText } from 'src/components';
 import { fonts, space, colors } from 'src/constants';
-import { APIEventsResponse, APIProjectsResponse } from 'src/types';
+import { APIEventsResponse } from 'src/types';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { getDaysLeft } from 'src/utils';
 
@@ -32,7 +32,7 @@ export const _EventInfo: FC<{
         </TouchableOpacity>
       )}
 
-      <View style={{ flexDirection: 'row' }}>
+      <View style={useMemo(() => ({ flexDirection: 'row' }), [])}>
         <MaterialIcons
           name='map-marker'
           color={colors.grey}
@@ -45,15 +45,21 @@ export const _EventInfo: FC<{
 
       {
         <View
-          style={{
-            flexDirection: 'row',
-            // flex: 1,
-            flexWrap: 'wrap'
-          }}>
+          style={useMemo(
+            () => ({
+              flexDirection: 'row',
+              // flex: 1,
+              flexWrap: 'wrap'
+            }),
+            []
+          )}>
           {!renderPartial && event && (
             <>
               <View
-                style={{ flexDirection: 'row', marginRight: space.sm * 1.75 }}>
+                style={{
+                  flexDirection: 'row',
+                  marginRight: space.sm * 1.75
+                }}>
                 <MaterialIcons
                   name='calendar'
                   color={colors.grey}
@@ -64,7 +70,10 @@ export const _EventInfo: FC<{
                 </REPText>
               </View>
               <View
-                style={{ flexDirection: 'row', marginRight: space.sm * 1.75 }}>
+                style={{
+                  flexDirection: 'row',
+                  marginRight: space.sm * 1.75
+                }}>
                 <MaterialIcons
                   name='timer'
                   color={colors.grey}
@@ -78,7 +87,7 @@ export const _EventInfo: FC<{
             </>
           )}
 
-          <View style={{ flexDirection: 'row' }}>
+          <View style={useMemo(() => ({ flexDirection: 'row' }), [])}>
             <MaterialIcons
               name='timer-sand'
               color={colors.grey}

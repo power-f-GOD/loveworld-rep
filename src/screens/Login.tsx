@@ -1,15 +1,14 @@
-import React, { useState, FC, useCallback } from 'react';
+import React, { useState, FC, useCallback, useMemo } from 'react';
 import { View, ScrollView } from 'react-native';
 
 import {
   Logo,
-  REPAnimate,
   REPTextInput,
   REPButton,
   REPText,
   REPLink
 } from 'src/components';
-import { fonts, space } from 'src/constants';
+import { fonts } from 'src/constants';
 import { REPStackScreenProps, UserData } from 'src/types';
 import { dispatch, triggerSignin, displaySnackbar } from 'src/state';
 import { authStyles } from 'src/styles';
@@ -48,8 +47,8 @@ export const _Login: FC<
           label='Email'
           value={email}
           autoCompleteType='email'
-          style={{ marginTop: 50 }}
-          onChangeText={(email) => setEmail(email)}
+          style={useMemo(() => ({ marginTop: 50 }), [])}
+          onChangeText={useCallback((email) => setEmail(email), [])}
         />
 
         <REPTextInput
@@ -57,10 +56,13 @@ export const _Login: FC<
           value={password}
           secureTextEntry={true}
           enablesReturnKeyAutomatically={true}
-          style={{
-            marginTop: 35
-          }}
-          onChangeText={(password) => setPassword(password)}
+          style={useMemo(
+            () => ({
+              marginTop: 35
+            }),
+            []
+          )}
+          onChangeText={useCallback((password) => setPassword(password), [])}
         />
 
         {/* <REPLink
@@ -82,7 +84,10 @@ export const _Login: FC<
           <REPLink
             bold
             style={authStyles.actionButtonRiderLink}
-            onPress={() => navigation.navigate('Register' as any)}>
+            onPress={useCallback(
+              () => navigation.navigate('Register' as any),
+              []
+            )}>
             Register here.
           </REPLink>
         </View>

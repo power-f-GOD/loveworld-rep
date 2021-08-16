@@ -16,7 +16,7 @@ import {
   ViewStyle
 } from 'react-native';
 import { View as MotiView, useAnimationState } from 'moti';
-import { colors, space, fonts, fontFamily } from 'src/constants';
+import { colors, space, fontFamily } from 'src/constants';
 import { REPText } from './REPText';
 
 const _REPTextInput: FC<
@@ -67,7 +67,7 @@ const _REPTextInput: FC<
       borderBottomWidth: isFocused ? 2 : 1,
       borderBottomColor: err ? colors.red : colors.black
     };
-  }, [isFocused]);
+  }, [isFocused, err]);
   const labelStyle = useMemo(() => {
     return {
       ...S.label,
@@ -142,7 +142,10 @@ const _REPTextInput: FC<
           pointerEvents='none'
           style={labelStyle}
           state={labelAnimState}
-          transition={{ type: 'timing' as any, duration: 250 }}>
+          transition={useMemo(
+            () => ({ type: 'timing' as any, duration: 250 }),
+            []
+          )}>
           <REPText color={err ? colors.red : colors.grey}>{label}</REPText>
         </MotiView>
       )}

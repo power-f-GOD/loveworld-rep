@@ -1,10 +1,15 @@
 import 'react-native-gesture-handler';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import React, { FC, useState, useCallback } from 'react';
+import React, { FC, useState, useCallback, useMemo } from 'react';
 import { connect } from 'react-redux';
-import { Portal, Modal as M, Text, Searchbar } from 'react-native-paper';
+import { Portal, Searchbar } from 'react-native-paper';
 import MaterialIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import { View, Modal, TouchableNativeFeedback, StyleSheet } from 'react-native';
+import {
+  View,
+  Modal,
+  TouchableNativeFeedback,
+  StyleSheet,
+  ScrollView
+} from 'react-native';
 
 import {
   AuthProps,
@@ -19,7 +24,6 @@ import { displayModal, fetchOrganizations } from 'src/state/actions';
 import { colors, space, fonts } from 'src/constants';
 import { REPAnimate } from './REPAnimate';
 import { REPText } from './REPText';
-import { ScrollView } from 'react-native-gesture-handler';
 
 let searchTimeout: NodeJS.Timeout;
 
@@ -54,23 +58,23 @@ const _REPModal: FC<{
         </TouchableNativeFeedback>
 
         <View
-          style={[
-            S.contentWrapper,
-            {
-              height: modal.full ? '100%' : '87.5%',
-              ...(!modal.full
-                ? {
-                    borderTopStartRadius: space.sm,
-                    borderTopEndRadius: space.sm
-                  }
-                : {})
-            }
-          ]}>
+          style={useMemo(
+            () => [
+              S.contentWrapper,
+              {
+                height: modal.full ? '100%' : '87.5%',
+                ...(!modal.full
+                  ? {
+                      borderTopStartRadius: space.sm,
+                      borderTopEndRadius: space.sm
+                    }
+                  : {})
+              }
+            ],
+            [modal.full]
+          )}>
           {modal.title && (
-            <REPText
-              size={fonts.h3.fontSize}
-              style={{ marginBottom: space.xs }}
-              bold>
+            <REPText size={fonts.h3.fontSize} mb={space.xs} bold>
               {modal.title}
             </REPText>
           )}

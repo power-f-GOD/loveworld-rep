@@ -231,10 +231,13 @@ const _EventActions: FC<{
       </View>
 
       <View
-        style={{
-          ...eventsStyles.cardActionsButtonWrapper,
-          marginLeft: 'auto'
-        }}>
+        style={useMemo(
+          () => ({
+            ...eventsStyles.cardActionsButtonWrapper,
+            marginLeft: 'auto'
+          }),
+          []
+        )}>
         <IconButton
           icon='comment-text-outline'
           size={buttonSize}
@@ -243,7 +246,7 @@ const _EventActions: FC<{
           style={eventsStyles.cardActionsButton}
           onPress={handleDisplayDetails}
         />
-        <REPText size={buttonLabelTextSize}>57</REPText>
+        <REPText size={buttonLabelTextSize}>0</REPText>
       </View>
 
       {/* {!onDetailsScreen && (

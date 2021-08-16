@@ -1,4 +1,4 @@
-import React, { FC, memo } from 'react';
+import React, { FC, memo, useMemo } from 'react';
 import { Image, View, ImageSourcePropType } from 'react-native';
 import { SharedElement } from 'react-navigation-shared-element';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -36,15 +36,18 @@ const _ProjectDetails: FC<{
 
   return (
     <View
-      style={{
-        paddingVertical: space.xs * 1.5,
-        backgroundColor: colors.white,
-        height: '100%'
-      }}>
+      style={useMemo(
+        () => ({
+          paddingVertical: space.xs * 1.5,
+          backgroundColor: colors.white,
+          height: '100%'
+        }),
+        []
+      )}>
       <REPAnimate
         magnitude={space.xs}
         delay={0}
-        contentStyle={{ paddingHorizontal: space.xs }}>
+        contentStyle={useMemo(() => ({ paddingHorizontal: space.xs }), [])}>
         <REPText size={fonts.h2.fontSize} bold>
           {project.title}
         </REPText>
@@ -54,25 +57,31 @@ const _ProjectDetails: FC<{
         <REPText
           // size={fonts.h2.fontSize}
           mt={space.xs}
-          style={{ marginBottom: space.xxs }}>
+          mb={space.xxs}>
           {project.details}
         </REPText>
 
         <SharedElement
           id={`project.${project._id}.banner`}
-          style={{
-            minHeight: 250,
-            marginVertical: space.xs * 1.5,
-            paddingHorizontal: 0
-          }}>
+          style={useMemo(
+            () => ({
+              minHeight: 250,
+              marginVertical: space.xs * 1.5,
+              paddingHorizontal: 0
+            }),
+            []
+          )}>
           <Image
-            style={[
-              eventsStyles.cardBanner,
-              {
-                width: '100%',
-                height: '100%'
-              }
-            ]}
+            style={useMemo(
+              () => [
+                eventsStyles.cardBanner,
+                {
+                  width: '100%',
+                  height: '100%'
+                }
+              ],
+              []
+            )}
             source={imageSrc}
           />
         </SharedElement>

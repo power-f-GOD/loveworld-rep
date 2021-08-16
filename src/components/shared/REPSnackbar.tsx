@@ -1,5 +1,5 @@
 import 'react-native-gesture-handler';
-import React, { FC } from 'react';
+import React, { FC, useMemo, useCallback } from 'react';
 import { connect } from 'react-redux';
 import { Snackbar } from 'react-native-paper';
 
@@ -14,19 +14,27 @@ const _REPSnackbar: FC<{
   return (
     <Snackbar
       visible={!!snackbar.open}
-      style={{
-        backgroundColor: colors[snackbar.severity || 'info']
-        // borderRadius: 0,
-        // margin: 0
-      }}
-      onDismiss={() => dispatch(displaySnackbar({ open: false }))}
-      action={{
-        label: snackbar.label || 'OK',
-        labelStyle: { color: 'white' },
-        onPress: () => {
-          // Do something
-        }
-      }}>
+      style={useMemo(
+        () => ({
+          backgroundColor: colors[snackbar.severity || 'info']
+          // borderRadius: 0,
+          // margin: 0
+        }),
+        [snackbar.severity]
+      )}
+      onDismiss={useCallback(() => {
+        dispatch(displaySnackbar({ open: false }));
+      }, [])}
+      action={useMemo(
+        () => ({
+          label: snackbar.label || 'OK',
+          labelStyle: { color: 'rgba(255, 255, 255, 0.75)' },
+          onPress: () => {
+            // Do something
+          }
+        }),
+        []
+      )}>
       {snackbar.message}
     </Snackbar>
   );

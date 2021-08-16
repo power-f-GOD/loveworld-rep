@@ -1,15 +1,7 @@
-import React, { FC, memo, useMemo } from 'react';
-import {
-  StyleProp,
-  ViewStyle,
-  View,
-  StyleSheet,
-  Text,
-  TextStyle
-} from 'react-native';
-import { Button } from 'react-native-paper';
+import React, { FC, useMemo } from 'react';
+import { StyleProp, Text, TextStyle } from 'react-native';
 
-import { colors, fontFamily, fonts } from 'src/constants';
+import { colors, fonts } from 'src/constants';
 
 export const REPText: FC<{
   style?: StyleProp<TextStyle>;
@@ -73,7 +65,7 @@ export const REPText: FC<{
             ...(me !== undefined ? { marginEnd: me } : {}),
             ...(ms !== undefined ? { marginStart: ms } : {})
           } as StyleProp<TextStyle>),
-        []
+        [color, size, bold]
       )}>
       {children}
     </Text>

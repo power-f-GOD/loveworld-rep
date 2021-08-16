@@ -1,4 +1,4 @@
-import React, { FC, memo, Fragment } from 'react';
+import React, { FC, memo, Fragment, useMemo } from 'react';
 import { Image, View, ImageSourcePropType, ScrollView } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { SharedElement } from 'react-navigation-shared-element';
@@ -36,11 +36,14 @@ const _EventInvite: FC<{
   return (
     <>
       <ScrollView
-        style={{
-          paddingBottom: space.xs * 1.5,
-          backgroundColor: 'white',
-          height: '100%'
-        }}>
+        style={useMemo(
+          () => ({
+            paddingBottom: space.xs * 1.5,
+            backgroundColor: 'white',
+            height: '100%'
+          }),
+          []
+        )}>
         <SharedElement
           id={`event.${event._id}.banner`}
           style={{
@@ -89,16 +92,19 @@ const _EventInvite: FC<{
           </REPText>
         </SharedElement>
 
-        <View style={{ paddingHorizontal: space.sm }}>
+        <View style={useMemo(() => ({ paddingHorizontal: space.sm }), [])}>
           <REPText
             // size={fonts.h2.fontSize}
             my={space.xs}
             mb={space.sm}
-            style={{
-              borderBottomWidth: 1,
-              paddingBottom: space.sm,
-              borderBottomColor: '#eee'
-            }}
+            style={useMemo(
+              () => ({
+                borderBottomWidth: 1,
+                paddingBottom: space.sm,
+                borderBottomColor: '#eee'
+              }),
+              []
+            )}
             size={space.sm * 0.75}>
             {event.details}
           </REPText>
@@ -128,29 +134,7 @@ const _EventInvite: FC<{
             </Fragment>
           ))}
 
-          {!event.form ? (
-            <View
-              style={{
-                marginVertical: space.lg,
-                paddingHorizontal: space.md,
-                alignItems: 'center'
-              }}>
-              <MaterialIcons
-                name='folder-open-outline'
-                color={colors.grey}
-                size={space.lg}
-                style={eventsStyles.cardInfoIcon}
-              />
-
-              <REPText alignment='center' mt={space.sm} color={colors.grey}>
-                There is no data/invite form for this Event.
-              </REPText>
-              <REPText alignment='center' color={colors.grey}>
-                Kindly reach out to the OP [original poster] of this Event so
-                they might add one.
-              </REPText>
-            </View>
-          ) : (
+          {event.form ? (
             <Button
               color={colors.green}
               style={{ marginBottom: space.md, marginTop: space.sm }}
@@ -173,6 +157,28 @@ const _EventInvite: FC<{
                 style={{ ...eventsStyles.cardInfoIcon, marginStart: 5 }}
               />
             </Button>
+          ) : (
+            <View
+              style={{
+                marginVertical: space.lg,
+                paddingHorizontal: space.md,
+                alignItems: 'center'
+              }}>
+              <MaterialIcons
+                name='folder-open-outline'
+                color={colors.grey}
+                size={space.lg}
+                style={eventsStyles.cardInfoIcon}
+              />
+
+              <REPText alignment='center' mt={space.sm} color={colors.grey}>
+                There is no data/invite form for this Event.
+              </REPText>
+              <REPText alignment='center' color={colors.grey}>
+                Kindly reach out to the OP [original poster] of this Event so
+                they might add one.
+              </REPText>
+            </View>
           )}
         </View>
       </ScrollView>

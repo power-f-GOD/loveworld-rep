@@ -1,4 +1,4 @@
-import React, { FC, memo } from 'react';
+import React, { FC, memo, useMemo } from 'react';
 import { View, StyleProp, ViewStyle } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { TouchableOpacity } from 'react-native-gesture-handler';
@@ -54,8 +54,9 @@ export const _ProjectInfo: FC<{
         </TouchableOpacity>
       )}
 
-      <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
-        <View style={{ flexDirection: 'row' }}>
+      <View
+        style={useMemo(() => ({ flexDirection: 'row', flexWrap: 'wrap' }), [])}>
+        <View style={useMemo(() => ({ flexDirection: 'row' }), [])}>
           <MaterialIcons
             name='account-circle'
             color={colors.grey}
@@ -88,28 +89,37 @@ export const _ProjectInfo: FC<{
 
       <View>
         <View
-          style={{
-            backgroundColor: 'transparent',
-            borderRadius: space.xs,
-            borderWidth: 1,
-            borderColor: '#ddd',
-            height: 6,
-            marginTop: space.xs
-          }}>
+          style={useMemo(
+            () => ({
+              backgroundColor: 'transparent',
+              borderRadius: space.xs,
+              borderWidth: 1,
+              borderColor: '#ddd',
+              height: 6,
+              marginTop: space.xs
+            }),
+            []
+          )}>
           <View
-            style={{
-              height: '100%',
-              width: `${completion}%`,
-              backgroundColor: completionColor,
-              borderRadius: space.xs
-            }}
+            style={useMemo(
+              () => ({
+                height: '100%',
+                width: `${completion}%`,
+                backgroundColor: completionColor,
+                borderRadius: space.xs
+              }),
+              []
+            )}
           />
         </View>
         <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between'
-          }}>
+          style={useMemo(
+            () => ({
+              flexDirection: 'row',
+              justifyContent: 'space-between'
+            }),
+            []
+          )}>
           <REPText size={space.sm * 0.65}>Completion</REPText>
           <REPText size={space.sm * 0.65} bold>
             {completion}%

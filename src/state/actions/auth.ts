@@ -9,7 +9,6 @@ import {
   AuthProps,
   ActionProps,
   HttpStatusProps,
-  APIBaseResponse,
   APIAuthResponse,
   SigninProps,
   RegisterProps,

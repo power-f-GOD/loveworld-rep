@@ -1,11 +1,9 @@
 import React, { FC, useEffect, useCallback, useMemo, memo } from 'react';
 import { FAB, Button } from 'react-native-paper';
-import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
-import { connect } from 'react-redux';
 import { useAnimationState, MotiView } from 'moti';
 import { StyleSheet } from 'react-native';
 
-import { MainStackParamList, REPStackScreenProps, UserData } from 'src/types';
+import { MainStackParamList } from 'src/types';
 import { REPText } from './REPText';
 import { REPAnimate } from './REPAnimate';
 import { colors } from 'src/constants';
@@ -32,14 +30,6 @@ const _REPFAB: FC<{
       scale: 1
     }
   });
-  const FABTransition = useMemo(() => {
-    return { type: 'spring', duration: 250 };
-  }, []);
-  const FABStyle = useMemo(() => {
-    return {
-      backgroundColor: barColor
-    };
-  }, [barColor]);
 
   const handleActionPress = useCallback(
     (action: string) => {
@@ -109,9 +99,17 @@ const _REPFAB: FC<{
       state={FABAnimState}
       pointerEvents={canActivateFAB ? undefined : 'none'}
       style={S.FABWrapper}
-      transition={FABTransition as any}>
+      transition={
+        useMemo(() => {
+          return { type: 'spring', duration: 250 };
+        }, []) as any
+      }>
       <FAB
-        style={FABStyle}
+        style={useMemo(() => {
+          return {
+            backgroundColor: barColor
+          };
+        }, [barColor])}
         icon='plus'
         onPress={canActivateFAB ? handleFABPress : undefined}
       />
