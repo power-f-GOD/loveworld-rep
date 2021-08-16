@@ -1,5 +1,5 @@
 import React, { FC, memo, useMemo } from 'react';
-import { Image, View, ImageSourcePropType } from 'react-native';
+import { Image, ImageSourcePropType, ScrollView } from 'react-native';
 import { SharedElement } from 'react-navigation-shared-element';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RouteProp } from '@react-navigation/native';
@@ -35,7 +35,7 @@ const _ProjectDetails: FC<{
   }
 
   return (
-    <View
+    <ScrollView
       style={useMemo(
         () => ({
           paddingVertical: space.xs * 1.5,
@@ -47,7 +47,10 @@ const _ProjectDetails: FC<{
       <REPAnimate
         magnitude={space.xs}
         delay={0}
-        contentStyle={useMemo(() => ({ paddingHorizontal: space.xs }), [])}>
+        contentStyle={useMemo(
+          () => ({ paddingHorizontal: space.xs * 1.5 }),
+          []
+        )}>
         <REPText size={fonts.h2.fontSize} bold>
           {project.title}
         </REPText>
@@ -101,7 +104,7 @@ const _ProjectDetails: FC<{
           development.
         </REPText>
       </REPAnimate>
-    </View>
+    </ScrollView>
   );
 };
 

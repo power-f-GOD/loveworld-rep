@@ -37,14 +37,11 @@ const _Events: FC<
     <>
       {!eventsData?.length && (
         <View
-          style={useMemo(
-            () => ({
-              height: '100%',
-              justifyContent: 'center',
-              alignItems: 'center'
-            }),
-            []
-          )}>
+          style={{
+            height: '100%',
+            justifyContent: 'center',
+            alignItems: 'center'
+          }}>
           {eventsStatus === 'pending' ? (
             <ActivityIndicator
               animating={eventsStatus === 'pending'}
@@ -59,7 +56,7 @@ const _Events: FC<
               style={eventsStyles.cardInfoIcon}
             />
           )}
-          <REPText margin={space.xs}>
+          <REPText margin={space.xs} alignment='center'>
             {eventsStatus === 'pending'
               ? 'Fetching upcoming Events... Kindly wait a moment.'
               : eventsErred

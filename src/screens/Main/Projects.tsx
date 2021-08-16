@@ -44,14 +44,11 @@ const _Projects: FC<
     <>
       {!projectsData?.length && (
         <View
-          style={useMemo(
-            () => ({
-              height: '100%',
-              justifyContent: 'center',
-              alignItems: 'center'
-            }),
-            []
-          )}>
+          style={{
+            height: '100%',
+            justifyContent: 'center',
+            alignItems: 'center'
+          }}>
           {projectsStatus === 'pending' ? (
             <ActivityIndicator
               animating={projectsStatus === 'pending'}
@@ -66,7 +63,7 @@ const _Projects: FC<
               style={eventsStyles.cardInfoIcon}
             />
           )}
-          <REPText margin={space.xs}>
+          <REPText margin={space.xs} alignment='center'>
             {projectsStatus === 'pending'
               ? 'Fetching pending Projects... Kindly wait a moment.'
               : projectsErred

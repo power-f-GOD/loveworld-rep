@@ -68,7 +68,10 @@ export const _ProjectInfo: FC<{
         </View>
 
         {!renderPartial && (
-          <View style={{ flexDirection: 'row' }}>
+          <View
+            style={{
+              flexDirection: 'row'
+            }}>
             <MaterialIcons
               name='timer-sand'
               color={colors.grey}

@@ -1,5 +1,5 @@
 import React, { FC, memo, useMemo } from 'react';
-import { Image, View, ImageSourcePropType } from 'react-native';
+import { Image, ImageSourcePropType, ScrollView } from 'react-native';
 import { SharedElement } from 'react-navigation-shared-element';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RouteProp } from '@react-navigation/native';
@@ -32,7 +32,7 @@ const _EventDetails: FC<{
   // }
 
   return (
-    <View
+    <ScrollView
       style={useMemo(
         () => ({
           paddingVertical: space.xs * 1.5,
@@ -102,7 +102,7 @@ const _EventDetails: FC<{
           development.
         </REPText>
       </REPAnimate>
-    </View>
+    </ScrollView>
   );
 };
 

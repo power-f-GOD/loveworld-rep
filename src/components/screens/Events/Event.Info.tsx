@@ -43,74 +43,75 @@ export const _EventInfo: FC<{
         </REPText>
       </View>
 
-      {
-        <View
-          style={useMemo(
-            () => ({
-              flexDirection: 'row',
-              // flex: 1,
-              flexWrap: 'wrap'
-            }),
-            []
-          )}>
-          {!renderPartial && event && (
-            <>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  marginRight: space.sm * 1.75
-                }}>
-                <MaterialIcons
-                  name='calendar'
-                  color={colors.grey}
-                  style={eventsStyles.cardInfoIcon}
-                />
-                <REPText size={space.xs + 4} color={colors.grey}>
-                  {new Date(event.date || Date.now()).toDateString()}
-                </REPText>
-              </View>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  marginRight: space.sm * 1.75
-                }}>
-                <MaterialIcons
-                  name='timer'
-                  color={colors.grey}
-                  style={eventsStyles.cardInfoIcon}
-                />
-                <REPText size={space.xs + 4} color={colors.grey}>
-                  {new Date(event.date || Date.now()).getHours()}
-                  :00
-                </REPText>
-              </View>
-            </>
-          )}
+      <View
+        style={useMemo(
+          () => ({
+            flexDirection: 'row',
+            flexWrap: 'wrap',
+            borderBottomColor: '#eee',
+            ...(!renderPartial
+              ? { borderBottomWidth: 1, paddingBottom: space.xs }
+              : {})
+          }),
+          []
+        )}>
+        {!renderPartial && event && (
+          <>
+            <View
+              style={{
+                flexDirection: 'row',
+                marginRight: space.sm * 1.75
+              }}>
+              <MaterialIcons
+                name='calendar'
+                color={colors.grey}
+                style={eventsStyles.cardInfoIcon}
+              />
+              <REPText size={space.xs + 4} color={colors.grey}>
+                {new Date(event.date || Date.now()).toDateString()}
+              </REPText>
+            </View>
+            <View
+              style={{
+                flexDirection: 'row',
+                marginRight: space.sm * 1.75
+              }}>
+              <MaterialIcons
+                name='timer'
+                color={colors.grey}
+                style={eventsStyles.cardInfoIcon}
+              />
+              <REPText size={space.xs + 4} color={colors.grey}>
+                {new Date(event.date || Date.now()).getHours()}
+                :00
+              </REPText>
+            </View>
+          </>
+        )}
 
-          <View style={useMemo(() => ({ flexDirection: 'row' }), [])}>
-            <MaterialIcons
-              name='timer-sand'
-              color={colors.grey}
-              style={eventsStyles.cardInfoIcon}
-            />
+        <View style={useMemo(() => ({ flexDirection: 'row' }), [])}>
+          <MaterialIcons
+            name='timer-sand'
+            color={colors.grey}
+            style={eventsStyles.cardInfoIcon}
+          />
 
-            <REPText size={space.xs + 4} color={colors.grey} bold>
-              {daysLeft >= 1 ? (
-                <>
-                  {daysLeft === 1 ? 'a' : daysLeft} day
-                  {daysLeft === 1 ? '' : 's'} away
-                </>
-              ) : (
-                <>
-                  {daysLeft === 0
-                    ? 'today'
-                    : 'happened on ' + new Date(event.date).toDateString()}
-                </>
-              )}
-            </REPText>
-          </View>
+          <REPText size={space.xs + 4} color={colors.grey} bold>
+            {daysLeft >= 1 ? (
+              <>
+                {daysLeft === 1 ? 'a' : daysLeft} day
+                {daysLeft === 1 ? '' : 's'} away
+              </>
+            ) : (
+              <>
+                {daysLeft === 0
+                  ? 'today'
+                  : 'happened on ' + new Date(event.date).toDateString()}
+              </>
+            )}
+          </REPText>
         </View>
-      }
+      </View>
     </View>
   );
 };
