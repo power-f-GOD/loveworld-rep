@@ -17,7 +17,7 @@ export const Logo: FC<{
         <REPAnimate
           style={S.box}
           type='scale'
-          duration={500}
+          duration={400}
           noAnimate={!animate}
           magnitude={1.5}
           loop={loopAnimation}>
@@ -83,26 +83,29 @@ const S = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'space-between',
     width: boxSize,
+    height: (boxSize + 5) * 3,
     marginRight: 6,
+    // borderWidth: 1,
     top: 5
   },
   box: {
     height: boxSize,
     width: boxSize,
-    position: 'absolute',
-    borderRadius: 1.5
+    // position: 'absolute',
+    borderRadius: 2,
+    marginBottom: 3
   },
   redBox: {
-    backgroundColor: colors.red,
-    top: (boxSize + 6.25) * 0
+    backgroundColor: colors.red
+    // marginTop: (boxSize + 6.25) * 0
   },
   greenBox: {
-    backgroundColor: colors.green,
-    top: (boxSize + 6.25) * 1
+    backgroundColor: colors.green
+    // marginTop: (boxSize + 6.25) * 1
   },
   blueBox: {
-    backgroundColor: colors.purple,
-    top: (boxSize + 6.25) * 2
+    backgroundColor: colors.purple
+    // marginTop: (boxSize + 6.25) * 2
   },
   loveworld: {
     fontSize: 12,

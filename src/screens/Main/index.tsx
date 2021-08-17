@@ -15,17 +15,16 @@ import { colors, space, fonts } from 'src/constants';
 import { dispatch, triggerSignout } from 'src/state';
 import { Events } from './Events';
 
-const Tab = createMaterialTopTabNavigator(); // createMaterialBottomTabNavigator();
-let currentTab: keyof MainStackParamList = 'Dashboard';
+const Tab = createMaterialTopTabNavigator();
 
 const _Main: FC<REPStackScreenProps<'Main'> & { userData: UserData }> = ({
   userData
 }) => {
   const is_admin = userData.is_admin;
   let barColor = colors.black;
-  // const [currentTab, setCurrentTab] = useState<keyof MainStackParamList>(
-  //   'Dashboard'
-  // );
+  const [currentTab, setCurrentTab] = useState<keyof MainStackParamList>(
+    'Dashboard'
+  );
   const [openMenu, setOpenMenu] = useState(false);
   const currentTabIsDash = currentTab === 'Dashboard';
   const FABAnimState = useAnimationState({
@@ -41,20 +40,21 @@ const _Main: FC<REPStackScreenProps<'Main'> & { userData: UserData }> = ({
   const screenListeners = useMemo(() => {
     return {
       tabPress: (e: any) => {
-        // console.log('FOCUSED');
-        // setTimeout(
-        //   () =>
-        //     setCurrentTab(
-        currentTab = e.target.split('-')[0] || 0;
-        // ),
-        // 0
-        // );
+        setTimeout(
+          () => setCurrentTab(e.target.split('-')[0] || 'Dashboard'),
+          0
+        );
       },
       focus: (e: any) => {
-        currentTab = e.target.split('-')[0] || 0;
+        const tab = e.target.split('-')[0] || 'Dashboard';
+
+        if (tab !== currentTab) {
+          setCurrentTab(tab);
+        }
       }
     };
-  }, []);
+  }, [currentTab]);
+
   const screenOptions = useCallback(
     (tabBarLabel: keyof MainStackParamList, iconName: string) => {
       return {
@@ -66,18 +66,21 @@ const _Main: FC<REPStackScreenProps<'Main'> & { userData: UserData }> = ({
     },
     []
   );
+
   const dashboardOptions = useMemo(
     () => screenOptions('Dashboard', 'view-dashboard'),
-    []
+    [screenOptions]
   );
   const recordsOptions = useMemo(() => screenOptions('Records', 'database'), [
     screenOptions
   ]);
   const eventsOptions = useMemo(
     () => screenOptions('Events', 'calendar-month'),
-    []
+    [screenOptions]
   );
-  const projectsOptions = useMemo(() => screenOptions('Projects', 'cash'), []);
+  const projectsOptions = useMemo(() => screenOptions('Projects', 'cash'), [
+    screenOptions
+  ]);
 
   useEffect(() => {
     FABAnimState.transitionTo(
@@ -120,7 +123,11 @@ const _Main: FC<REPStackScreenProps<'Main'> & { userData: UserData }> = ({
             <Logo
               style={useMemo(
                 () => ({
-                  transform: [{ scale: 0.6 }, { translateX: -10 }],
+                  transform: [
+                    { scale: 0.6 },
+                    { translateX: -10 },
+                    { translateY: 4 }
+                  ],
                   marginLeft: 0
                 }),
                 []
