@@ -8,3 +8,4 @@ export * from './REPModal';
 export * from './REPFAB';
 export * from './REPSnackbar';
 export * from './REPActionSheet';
+export * from './Comment';

@@ -56,7 +56,8 @@ export const _ProjectInfo: FC<{
 
       <View
         style={useMemo(() => ({ flexDirection: 'row', flexWrap: 'wrap' }), [])}>
-        <View style={useMemo(() => ({ flexDirection: 'row' }), [])}>
+        <View
+          style={useMemo(() => ({ flexDirection: 'row', width: '100%' }), [])}>
           <MaterialIcons
             name='account-circle'
             color={colors.grey}
@@ -68,25 +69,42 @@ export const _ProjectInfo: FC<{
         </View>
 
         {!renderPartial && (
-          <View
-            style={{
-              flexDirection: 'row'
-            }}>
-            <MaterialIcons
-              name='timer-sand'
-              color={colors.grey}
-              style={eventsStyles.cardInfoIcon}
-            />
-            <REPText size={space.xs + 4} color={colors.grey} bold>
-              {daysLeft >= 1 ? (
-                <>
-                  due in {daysLeft} day{daysLeft === 1 ? '' : 's'}
-                </>
-              ) : (
-                <>due</>
-              )}
-            </REPText>
-          </View>
+          <>
+            <View
+              style={{
+                flexDirection: 'row'
+              }}>
+              <MaterialIcons
+                name='timer-sand'
+                color={colors.grey}
+                style={eventsStyles.cardInfoIcon}
+              />
+              <REPText
+                size={space.xs + 4}
+                color={colors.grey}
+                bold
+                me={space.md * 1.25}>
+                {daysLeft >= 1 ? (
+                  <>
+                    due in {daysLeft} day{daysLeft === 1 ? '' : 's'}
+                  </>
+                ) : (
+                  <>due</>
+                )}
+              </REPText>
+            </View>
+
+            <View style={useMemo(() => ({ flexDirection: 'row' }), [])}>
+              <MaterialIcons
+                name='cash'
+                color={colors.grey}
+                style={eventsStyles.cardInfoIcon}
+              />
+              <REPText size={space.xs + 4} color={colors.grey} me={space.md}>
+                NGN 300K (budget)
+              </REPText>
+            </View>
+          </>
         )}
       </View>
 
@@ -130,15 +148,13 @@ export const _ProjectInfo: FC<{
         </View>
       </View>
 
-      {
-        <View
-          style={{
-            flexDirection: 'row',
-            // flex: 1,
-            flexWrap: 'wrap'
-          }}
-        />
-      }
+      <View
+        style={{
+          flexDirection: 'row',
+          // flex: 1,
+          flexWrap: 'wrap'
+        }}
+      />
     </View>
   );
 };

@@ -3,11 +3,17 @@ import { View, ImageSourcePropType } from 'react-native';
 import { Button, IconButton } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
 
-import { dispatch, displaySnackbar, displayActionSheet } from 'src/state';
+import {
+  dispatch,
+  displaySnackbar,
+  displayActionSheet,
+  displayModal
+} from 'src/state';
 import { eventsStyles, actionSheetOptionsStyles } from 'src/styles';
 import { REPText } from '../../shared';
 import { colors, space } from 'src/constants';
 import { APIEventsResponse } from 'src/types';
+import { Comments } from 'src/components/__modals';
 
 const _EventActions: FC<{
   event?: APIEventsResponse[0];
@@ -244,7 +250,21 @@ const _EventActions: FC<{
           animated
           color={colors.grey}
           style={eventsStyles.cardActionsButton}
-          onPress={handleDisplayDetails}
+          onPress={useCallback(() => {
+            if (handleDisplayDetails) handleDisplayDetails();
+            setTimeout(
+              () => {
+                dispatch(
+                  displayModal({
+                    open: true,
+                    fade: true,
+                    children: [<Comments anchor='Events' key={'0'} />]
+                  })
+                );
+              },
+              handleDisplayDetails ? 500 : 0
+            );
+          }, [])}
         />
         <REPText size={buttonLabelTextSize}>0</REPText>
       </View>

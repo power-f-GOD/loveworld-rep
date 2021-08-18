@@ -65,7 +65,7 @@ export const REPText: FC<{
             ...(me !== undefined ? { marginEnd: me } : {}),
             ...(ms !== undefined ? { marginStart: ms } : {})
           } as StyleProp<TextStyle>),
-        [color, size, bold]
+        [color, size, bold, margin, my, mx, mb, mt, me, ms]
       )}>
       {children}
     </Text>

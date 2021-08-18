@@ -175,8 +175,11 @@ const _EventInvite: FC<{
                 There is no data/invite form for this Event.
               </REPText>
               <REPText alignment='center' color={colors.grey}>
-                Kindly reach out to the OP [original poster] of this Event so
-                they might add one.
+                Kindly reach out to{' '}
+                <REPText bold color={colors.grey}>
+                  {event.organization.name}
+                </REPText>{' '}
+                so they might add one.
               </REPText>
             </View>
           )}

@@ -6,7 +6,7 @@ import { StyleSheet } from 'react-native';
 import { MainStackParamList } from 'src/types';
 import { REPText } from './REPText';
 import { REPAnimate } from './REPAnimate';
-import { colors } from 'src/constants';
+import { colors, space } from 'src/constants';
 import { dispatch, displayModal, displayActionSheet } from 'src/state';
 import { actionSheetOptionsStyles } from 'src/styles';
 
@@ -37,13 +37,14 @@ const _REPFAB: FC<{
       dispatch(
         displayModal({
           open: true,
-          title:
-            action ||
-            (`${
-              currentTab === 'Records' ? 'Add a new' : 'Set a'
-            } ${currentTab.replace(/s$/, '')}` as any),
           children: [
-            <REPAnimate magnitude={0} key={0}>
+            <REPAnimate
+              magnitude={0}
+              key={'0'}
+              style={{ paddingHorizontal: space.xs * 1.5 }}>
+              <REPText bold size={space.sm} mt={space.xs * 1.5}>
+                {action}
+              </REPText>
               <REPText>COMING SOON!</REPText>
             </REPAnimate>
           ]

@@ -1,48 +1,20 @@
 import 'react-native-gesture-handler';
-import React, { FC, useState, useCallback, useMemo } from 'react';
+import React, { FC, useCallback, useMemo } from 'react';
 import { connect } from 'react-redux';
-import { Portal, Searchbar } from 'react-native-paper';
-import MaterialIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import {
-  View,
-  Modal,
-  TouchableNativeFeedback,
-  StyleSheet,
-  ScrollView
-} from 'react-native';
+import { Portal } from 'react-native-paper';
+import { View, Modal, TouchableNativeFeedback, StyleSheet } from 'react-native';
 
-import {
-  AuthProps,
-  REPSnackbarProps,
-  REPModalProps,
-  FetchState,
-  APIOrgQueryResponse,
-  HttpStatusProps
-} from 'src/types';
+import { REPModalProps } from 'src/types';
 import { dispatch } from 'src/state/store';
-import { displayModal, fetchOrganizations } from 'src/state/actions';
-import { colors, space, fonts } from 'src/constants';
+import { displayModal } from 'src/state/actions';
+import { colors, space } from 'src/constants';
 import { REPAnimate } from './REPAnimate';
-import { REPText } from './REPText';
-
-let searchTimeout: NodeJS.Timeout;
 
 const _REPModal: FC<{
   modal: REPModalProps;
-  searchStatus: HttpStatusProps['status'];
-}> = ({ modal, searchStatus }) => {
-  const [searchQuery, setSearchQuery] = useState('');
-
+}> = ({ modal }) => {
   const handleModalClose = useCallback(() => {
     dispatch(displayModal({ open: false }));
-  }, []);
-
-  const onChangeSearch = useCallback((keyword) => {
-    clearTimeout(searchTimeout);
-    setSearchQuery(keyword);
-    searchTimeout = setTimeout(() => {
-      dispatch(fetchOrganizations(keyword));
-    }, 650);
   }, []);
 
   return (
@@ -73,70 +45,16 @@ const _REPModal: FC<{
             ],
             [modal.full]
           )}>
-          {modal.title && (
-            <REPText size={fonts.h3.fontSize} mb={space.xs} bold>
-              {modal.title}
-            </REPText>
-          )}
-          {/search|find/i.test(modal.title || '') && (
-            <>
-              <Searchbar
-                placeholder='Enter keyword...'
-                onChangeText={onChangeSearch}
-                value={searchQuery}
-                inputStyle={{
-                  fontSize: 15
-                }}
-              />
-              <REPText style={{ marginTop: 5, height: 20 }} color={colors.grey}>
-                {searchStatus === 'pending'
-                  ? 'Finding matching Churches...'
-                  : ''}
-              </REPText>
-              {!modal.children?.length && (
-                <View
-                  style={{
-                    marginBottom: 20,
-                    marginTop: 15,
-                    alignItems: 'center'
-                  }}>
-                  <MaterialIcons
-                    name='book-open-page-variant'
-                    color={colors.grey}
-                    size={35}
-                  />
-                  {searchStatus === 'fulfilled' && (
-                    <REPText
-                      size={16}
-                      style={{ marginTop: 10, textAlign: 'center' }}
-                      color={colors.grey}>
-                      Searched and found no matching Church.
-                    </REPText>
-                  )}
-                </View>
-              )}
-            </>
-          )}
-          <ScrollView>
-            <REPAnimate magnitude={10}>{modal.children}</REPAnimate>
-          </ScrollView>
+          <REPAnimate magnitude={10}>{modal.children}</REPAnimate>
         </View>
       </Modal>
     </Portal>
   );
 };
 
-export const REPModal = connect(
-  (state: {
-    auth: AuthProps;
-    snackbar: REPSnackbarProps;
-    modal: REPModalProps;
-    organizations: FetchState<APIOrgQueryResponse>;
-  }) => ({
-    modal: state.modal,
-    searchStatus: state.organizations.status
-  })
-)(_REPModal);
+export const REPModal = connect((state: { modal: REPModalProps }) => ({
+  modal: state.modal
+}))(_REPModal);
 
 const S = StyleSheet.create({
   backDrop: {
@@ -147,11 +65,10 @@ const S = StyleSheet.create({
     backgroundColor: colors.black
   },
   contentWrapper: {
-    padding: space.sm,
-    paddingTop: space.sm + 4,
+    padding: 0,
     backgroundColor: colors.white,
     maxHeight: '100%',
-    minHeight: 500,
+    minHeight: 400,
     bottom: 0,
     width: '100%',
     position: 'absolute'

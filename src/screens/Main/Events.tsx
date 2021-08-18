@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useMemo } from 'react';
+import React, { FC, useCallback } from 'react';
 import {
   FlatList,
   ListRenderItemInfo,
@@ -46,7 +46,7 @@ const _Events: FC<
             <ActivityIndicator
               animating={eventsStatus === 'pending'}
               size={space.md}
-              color={colors.purple}
+              color={colors.green}
             />
           ) : (
             <MaterialIcons

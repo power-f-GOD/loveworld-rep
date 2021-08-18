@@ -30,7 +30,7 @@ export const modal = (
   action: ActionProps<REPModalProps>
 ): REPModalProps => {
   return action.type === DISPLAY_MODAL
-    ? { ...state, full: false, fade: false, ...action.payload }
+    ? { ...state, full: false, fade: false, title: '', ...action.payload }
     : state;
 };
 

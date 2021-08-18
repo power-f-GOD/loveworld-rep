@@ -1,11 +1,15 @@
 import React, { FC, memo, useMemo } from 'react';
-import { Image, ImageSourcePropType, ScrollView } from 'react-native';
+import { Image, ImageSourcePropType, ScrollView, View } from 'react-native';
 import { SharedElement } from 'react-navigation-shared-element';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RouteProp } from '@react-navigation/native';
 
 import { REPAnimate, REPText } from 'src/components/shared';
-import { EventInfo, EventActions } from 'src/components/screens/Events';
+import {
+  EventInfo,
+  EventActions,
+  Comment
+} from 'src/components/screens/Events';
 import { eventsStyles } from 'src/styles';
 import { space, colors, fonts } from 'src/constants';
 import { APIEventsResponse } from 'src/types';
@@ -26,10 +30,6 @@ const _EventDetails: FC<{
 }> = ({ route }) => {
   const event = route.params?.event;
   const imageSrc = route?.params.imageSrc;
-
-  // if (!event) {
-  //   return null;
-  // }
 
   return (
     <ScrollView
@@ -86,15 +86,25 @@ const _EventDetails: FC<{
           />
         </SharedElement>
 
-        <EventActions
-          event={event}
-          onDetailsScreen={true}
-          imageSrc={imageSrc}
-        />
+        <View>
+          <EventActions
+            event={event}
+            onDetailsScreen={true}
+            imageSrc={imageSrc}
+          />
+        </View>
 
-        <REPText size={space.xs + 4} my={space.sm} color={colors.grey}>
-          Comments will appear below...
+        <REPText
+          size={space.xs + 4}
+          mt={space.sm}
+          mb={space.xs}
+          color={colors.grey}>
+          Comments (1)
         </REPText>
+
+        <View>
+          <Comment anchor='Events' renderPartial />
+        </View>
 
         <REPText size={space.xs + 4} my={space.sm} color={colors.grey} italic>
           PS. Kindly, note that some of the data currently on the app are dummy

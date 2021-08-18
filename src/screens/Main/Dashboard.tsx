@@ -1,9 +1,9 @@
 import React, { FC, useEffect, useMemo } from 'react';
-import { ScrollView, StyleSheet } from 'react-native';
+import { ScrollView } from 'react-native';
 
 import { dispatch, fetchEvents, fetchProjects } from 'src/state';
 import { mainStyles } from 'src/styles';
-import { fonts, colors, space } from 'src/constants';
+import { fonts } from 'src/constants';
 import { REPText } from 'src/components';
 import { connect } from 'react-redux';
 import {
@@ -13,6 +13,7 @@ import {
   APIProjectsResponse
 } from 'src/types';
 import { REPSummary, ExploitsGraph } from 'src/components/screens/Dashboard';
+import { RecentActivity } from 'src/components/screens/Dashboard/RecentActivity';
 
 const _Dashboard: FC<{
   userData: UserData;
@@ -46,6 +47,7 @@ const _Dashboard: FC<{
 
       <REPSummary />
       <ExploitsGraph />
+      <RecentActivity />
     </ScrollView>
   );
 };
@@ -62,5 +64,3 @@ export const Dashboard = connect(
       numProjects: state.projects.data?.length
     } as any)
 )(_Dashboard);
-
-const boxSize = 105;

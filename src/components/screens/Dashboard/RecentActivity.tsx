@@ -4,34 +4,33 @@ import { View } from 'react-native';
 import { fonts, colors, space } from 'src/constants';
 import { REPText } from 'src/components';
 
-const _ExploitsGraph: FC<any> = () => {
+const _RecentActivity: FC<any> = () => {
   return (
     <>
       <REPText mt={space.sm} size={fonts.h4.fontSize} bold color='#444'>
-        Exploits Graph:
+        Recent Activity:
       </REPText>
       <View
         style={useMemo(
           () => ({
-            height: space.xxl * 2.125,
+            height: space.xxl * 2,
             marginVertical: space.xs,
             backgroundColor: colors.white,
             borderRadius: space.xs,
             borderColor: '#ddd',
             borderWidth: 1,
             padding: space.sm,
-            justifyContent: 'center'
+            justifyContent: 'center',
+            marginBottom: space.md
           }),
           []
         )}>
         <REPText alignment='center' color={colors.grey}>
-          Displayed here will be a graph of Records you have set per time,
-          Events you have participated in, and Projects you have sponsored per
-          time
+          Your most recent activities will be shown here.
         </REPText>
       </View>
     </>
   );
 };
 
-export const ExploitsGraph = memo(_ExploitsGraph);
+export const RecentActivity = memo(_RecentActivity);

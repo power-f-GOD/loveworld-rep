@@ -4,9 +4,10 @@ import { IconButton } from 'react-native-paper';
 
 import { dispatch, displaySnackbar, displayModal } from 'src/state';
 import { eventsStyles } from 'src/styles';
-import { REPText } from '../../shared';
+import { REPText, REPAnimate } from '../../shared';
 import { colors, space } from 'src/constants';
 import { APIProjectsResponse } from 'src/types';
+import { Comments } from 'src/components/__modals';
 
 const _ProjectActions: FC<{
   project?: APIProjectsResponse[0];
@@ -50,8 +51,17 @@ const _ProjectActions: FC<{
     dispatch(
       displayModal({
         open: true,
-        title: 'Make a Pledge',
-        children: [<REPText key='0'>Coming soon!</REPText>]
+        children: [
+          <REPAnimate
+            magnitude={0}
+            key={'0'}
+            style={{ paddingHorizontal: space.xs * 1.5 }}>
+            <REPText bold size={space.sm} mt={space.xs * 1.5}>
+              Make a Pledge
+            </REPText>
+            <REPText>COMING SOON!</REPText>
+          </REPAnimate>
+        ]
       })
     );
   }, [actions.pledge, project]);
@@ -123,7 +133,21 @@ const _ProjectActions: FC<{
           animated
           color={colors.grey}
           style={eventsStyles.cardActionsButton}
-          onPress={handleDisplayDetails}
+          onPress={useCallback(() => {
+            if (handleDisplayDetails) handleDisplayDetails();
+            setTimeout(
+              () => {
+                dispatch(
+                  displayModal({
+                    open: true,
+                    fade: true,
+                    children: [<Comments anchor='Projects' key={'0'} />]
+                  })
+                );
+              },
+              handleDisplayDetails ? 500 : 0
+            );
+          }, [])}
         />
         <REPText size={buttonLabelTextSize}>57</REPText>
       </View>

@@ -186,8 +186,8 @@ const _Main: FC<REPStackScreenProps<'Main'> & { userData: UserData }> = ({
             tabBarPressColor: colors.white,
             tabBarBounces: true,
             tabBarInactiveTintColor: 'rgba(0, 0, 0, 0.3)',
-            tabBarActiveTintColor: currentTabIsDash ? colors.black : barColor,
-            lazy: true
+            tabBarActiveTintColor: currentTabIsDash ? colors.black : barColor
+            // lazy: true
           }),
           [currentTabIsDash, barColor]
         )}>

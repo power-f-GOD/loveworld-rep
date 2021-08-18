@@ -1,6 +1,6 @@
-import React, { useEffect, useState, FC, useCallback } from 'react';
+import React, { useState, FC, useCallback } from 'react';
 import { View, ScrollView, TouchableNativeFeedback } from 'react-native';
-import { TextInput, List } from 'react-native-paper';
+import { TextInput } from 'react-native-paper';
 
 import {
   Logo,
@@ -9,12 +9,7 @@ import {
   REPText,
   REPLink
 } from 'src/components';
-import {
-  REPStackScreenProps,
-  FetchState,
-  APIOrgQueryResponse,
-  UserData
-} from 'src/types';
+import { REPStackScreenProps, UserData } from 'src/types';
 import {
   dispatch,
   triggerRegister,
@@ -23,24 +18,23 @@ import {
 } from 'src/state';
 import { authStyles } from 'src/styles';
 import { connect } from 'react-redux';
+import { FindChurch } from 'src/components/__modals';
 
 const _Register: FC<
   REPStackScreenProps<'Register'> & {
-    organizations: FetchState<APIOrgQueryResponse>;
     userData: UserData;
   }
-> = ({ navigation, organizations: _orgs, userData }) => {
+> = ({ navigation, userData }) => {
   const [full_name, setFullname] = useState('' || userData.full_name || '');
   const [email, setEmail] = useState('' || userData.email || '');
   const [password, setPassword] = useState('' || userData.password || '');
   const [org, setOrg] = useState({ name: '', id: '' });
-  const { data: orgsData, status: orgsStatus } = _orgs;
 
   const handleChurchInputPress = useCallback(() => {
     dispatch(
       displayModal({
         open: true,
-        title: 'Find your Church'
+        children: [<FindChurch setOrg={setOrg} key={'0'} />]
       })
     );
   }, []);
@@ -83,40 +77,6 @@ const _Register: FC<
   const handlePasswordChange = useCallback((text: string) => {
     setPassword(text);
   }, []);
-
-  useEffect(() => {
-    if (orgsStatus !== 'fulfilled') return void 0;
-
-    dispatch(
-      displayModal({
-        children: orgsData?.map((org) => {
-          const zone = org.org_directory.find((org) => org.office === 'zone');
-
-          return (
-            <TouchableNativeFeedback
-              onPress={() => {
-                dispatch(displayModal({ open: false }));
-                setOrg({ name: org.name, id: org._id });
-              }}
-              key={org._id}>
-              <View>
-                <List.Item
-                  title={org.name}
-                  description={`Zone: ${zone?.name || '...'}`}
-                  left={(props) => (
-                    <List.Icon
-                      {...props}
-                      style={{ margin: 0 }}
-                      icon='map-marker'
-                    />
-                  )}></List.Item>
-              </View>
-            </TouchableNativeFeedback>
-          );
-        })
-      })
-    );
-  }, [orgsStatus, orgsData]);
 
   return (
     <View style={authStyles.Auth}>
@@ -184,12 +144,6 @@ const _Register: FC<
   );
 };
 
-export const Register = connect(
-  (state: {
-    organizations: FetchState<APIOrgQueryResponse>;
-    userData: UserData;
-  }) => ({
-    organizations: state.organizations,
-    userData: state.userData
-  })
-)(_Register);
+export const Register = connect((state: { userData: UserData }) => ({
+  userData: state.userData
+}))(_Register);
